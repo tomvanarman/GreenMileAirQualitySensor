@@ -40,12 +40,25 @@ export default class DeviceModel {
     public static async getDevices(): Promise<DeviceRow[]> {
         return await db().query(
             `
-            select d.id, d.name, d.updated_at, b.level from Device as d
-            left join DeviceBattery as b on d.id=b.Device_id
-            left join (
-                select Device_id, max(time_unix) as max_time from DeviceBattery group by Device_id
-            ) latest on latest.Device_id = b.Device_id and latest.max_time = b.time_unix
-            where d.revoked = 0;
+SELECT
+    d.id,
+    d.name,
+    d.updated_at,
+    b.level
+FROM Device d
+LEFT JOIN (
+    SELECT db.Device_id, db.level
+    FROM DeviceBattery db
+    JOIN (
+        SELECT Device_id, MAX(time_unix) AS max_time
+        FROM DeviceBattery
+        GROUP BY Device_id
+    ) latest
+      ON latest.Device_id = db.Device_id
+     AND latest.max_time = db.time_unix
+) b
+  ON b.Device_id = d.id
+WHERE d.revoked = 0
         `,
             []
         );

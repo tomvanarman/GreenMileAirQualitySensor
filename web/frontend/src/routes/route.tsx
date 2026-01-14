@@ -25,7 +25,7 @@ function RouteComponent() {
         // fetch data and update state
         const update = async () => {
             const p = await fetchData((search as any).deviceId ?? '');
-            if (p) {
+            if (p !== null || p >= 0) {
                 SetPercent(p * 100);
                 setIsLoading(false);
                 setError(undefined);

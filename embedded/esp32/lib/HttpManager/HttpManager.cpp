@@ -71,13 +71,8 @@ bool HttpManager::post(const String device_id, const String &signature, const St
     if (responseCode >= 200 && responseCode < 300)
     {
         DEBUG_LOG_LN("HTTPS POST response code: " + String(responseCode));
-        // If 204 No Content, do not attempt to read the response body which may not exist
-        if (responseCode == 204) {
-            DEBUG_LOG_LN("No content (204) — skipping response body.");
-        } else {
-            String responseBody = http.getString(); // Get the response body
-            DEBUG_LOG_LN("Response body: " + responseBody);
-        }
+        String responseBody = http.getString(); // Get the response body
+        DEBUG_LOG_LN("Response body: " + responseBody);
 
         http.end(); // End the HTTP connection
         return true;

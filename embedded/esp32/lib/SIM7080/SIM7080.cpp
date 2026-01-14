@@ -338,7 +338,7 @@ bool SIM7080::httpPost(const char *device_id, const char *signature, const char 
     }
 
     // Set custom authentication headers
-    _modem.sendAT("+SHAHEAD=\"X-Device-Id\",\"", device_id, "\"");
+    _modem.sendAT("+SHAHEAD=\"X-Device-ID\",\"", device_id, "\"");
     if (_modem.waitResponse() != 1)
     {
         DEBUG_FAIL("Set X-Device-ID header Failed!");

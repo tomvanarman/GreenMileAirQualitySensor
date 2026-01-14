@@ -1,0 +1,397 @@
+{% import "partials/language.html" as lang with context %}
+
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+	
+	<title>HBO-ICT: Knowledgebase</title>
+    <link rel="icon" href="images/hbo-ict-upperleft.svg" />
+
+    <!-- JavaScript libraries -->
+    {% block libs %}
+      {% for script in config.extra.polyfills %}
+        {{ script | script_tag }}
+      {% endfor %}
+    {% endblock %}
+
+    <!-- Helper functions for inline scripts -->
+    {% include "partials/javascripts/base.html" %}
+
+    {% set features = config.theme.features or [] %}
+</head>
+<body class="bg-[#231776]">
+	<div class="fixed top-24 z-0 left-0 w-0 h-0 border-t-[150px] border-t-transparent border-l-[250px] border-l-fuchsia-600 border-b-[150px] border-b-transparent hidden md:block"></div>
+	<div class="fixed top-[400px] z-0 left-[260px] w-0 h-0 border-t-[150px] border-t-transparent border-l-[250px] border-l-red-500 border-b-[150px] border-b-transparent hidden md:block"></div>
+	<div class="fixed top-[900px] z-0 left-44 w-0 h-0 border-t-[50px] border-t-transparent border-r-[75px] border-r-green-500 border-b-[50px] border-b-transparent hidden md:block"></div>
+	<div class="fixed top-40 -z-1 right-0 w-0 h-0 border-t-[50px] border-t-transparent border-r-[75px] border-r-white border-b-[50px] border-b-transparent hidden md:block"></div>
+
+    <input class="md-toggle hidden" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle hidden" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <div data-md-component="main"></div>
+
+    <header class="fixed flex justify-between bg-white h-20 w-full z-20">
+        <div></div>
+        <div><img src="./images/logos/HvA-HBO-ICT-zwart-RGB.png" class="h-20" /></div>
+    </header>
+
+    <div class="flex md:items-center md:justify-center w-full h-full min-h-[800px] pt-16 md:pt-20 pb-20 z-10 relative">
+        <header class="container max-w-[800px] flex justify-center py-14 px-10 md:px-0" data-md-component="header">
+
+            <div class="flex flex-col w-full">
+                <h1 class="text-xl md:text-4xl font-bold text-blue-700 animate-bounce">HBO-ICT</h1>
+                <div class="text-4xl md:text-7xl font-bold leading-snug -mt-3 md:-mt-4 md:-ml-1 h-20">
+                    <h2 class="text-white">Knowledgebase</h2>
+                </div>
+
+                {% if "material/search" in config.plugins %}                
+                    <div class="md-search relative" data-md-component="search" role="dialog">
+                        <label class="md-search__overlay" for="__search"></label>
+                        <div class="md-search__inner" role="search">
+                        <form class="md-search__form w-full mt-5 mb-20 md:mt-10" name="search">
+                            <div class="relative">
+
+                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input id="search-input" type="text" name="query" aria-label="{{ lang.t('search.placeholder') }}" placeholder="{{ lang.t('search.placeholder') }}" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" class="md-search__input block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                <button type="button" for="__search" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Zoeken</button>
+                            </div>
+                        </form>
+                        <div id="search-results" class="md-search__output hidden">
+                            <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+                            <div class="md-search-result" data-md-component="search-result">
+                                <div class="md-search-result__meta">
+                                {{ lang.t("search.result.initializer") }}
+                                </div>
+                                <ol class="md-search-result__list" role="presentation"></ol>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:-mx-20">
+                    <div>
+                        <h4 class="text-sm md:text-lg bg-red-400 p-2 px-2 md:px-3 text-gray-900 font-bold uppercase rounded-t-lg text-nowrap overflow-hidden">Beroepstaken</h4>
+                        <ul class="text-white text-sm md:text-base font-semibold divide-y divide-red-400 divide-dashed bg-indigo-900 px-4 pb-2 rounded-b-lg overflow-hidden">
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-red-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/basisvaardigheden/0_basisvaardigheden/" class="block w-full hover:text-red-600">Basisvaardigheden</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-red-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/gebruikers_interactie/gebruikersinteractie/" class="block w-full hover:text-red-600">Gebruikersinteractie</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-red-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/organisatie_processen/organisatieprocessen/" class="block w-full hover:text-red-600">Organisatieprocessen</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-red-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/infrastructuur/infrastructuur/" class="block w-full hover:text-red-600">Infrastructuur</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-red-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/software/software/" class="block w-full hover:text-red-600">Software</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-red-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/hardware_interfacing/hardwareinterfacing/" class="block w-full hover:text-red-600">Hardware Interfacing</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-sm md:text-lg bg-green-400 p-2 px-2 md:px-3 text-gray-900 font-bold uppercase rounded-t-lg text-nowrap overflow-hidden">Professional Skills</h4>
+                        <ul class="text-white text-sm md:text-base font-semibold divide-y divide-green-500 divide-dashed bg-indigo-900 px-4 pb-2 rounded-b-lg">
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-green-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/2_professional_skills/doelgericht_interacteren/0_doelgericht_interacteren/" class="block w-full hover:text-green-600">Interacteren</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-green-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/2_professional_skills/toekomstgericht_organiseren/0_toekomstgericht_organiseren/" class="block w-full hover:text-green-600">Organiseren</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-green-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/2_professional_skills/persoonlijk_leiderschap/0_persoonlijk_leiderschap/" class="block w-full hover:text-green-600">Persoonlijk leiderschap</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-green-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/2_professional_skills/onderzoekend_probleemoplossen/0_onderzoekend_probleemoplossen/" class="block w-full hover:text-green-600">Onderzoeken</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-sm md:text-lg bg-white p-2 px-2 md:px-3 text-gray-900 font-bold uppercase rounded-t-lg text-nowrap overflow-hidden">Interessant</h4>
+                        <ul class="text-white text-sm md:text-base font-semibold divide-y divide-white divide-dashed bg-indigo-900 px-4 pb-2 rounded-b-lg">
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-white border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/gebruikers_interactie/ontwerpen/wireframe/" class="block w-full hover:text-gray-400">Wireframes</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-white border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/software/ontwerpen/relationele_databases/0_relationele_databases/" class="block w-full hover:text-gray-400">Database ontwerpen</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-white border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/2_professional_skills/doelgericht_interacteren/communiceren/presenteren/" class="block w-full hover:text-gray-400">Presenteren</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-white border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/software/ontwerpen/uml/0_uml/" class="block w-full hover:text-gray-400">UML diagrammen</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-white border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/1_beroepstaken/software/manage_and_control/git/gebruiken/git_best_practices/" class="block w-full hover:text-gray-400">Git Best Practices</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-white border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/2_professional_skills/persoonlijk_leiderschap/persoonlijke_ontwikkeling/SMART_leerdoelen/" class="block w-full hover:text-gray-400">SMART-leerdoelen</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-sm md:text-lg bg-cyan-500 p-2 px-2 md:px-3 text-gray-900 font-bold uppercase rounded-t-lg text-nowrap overflow-hidden">Onderwijs</h4>
+                        <ul class="text-white text-sm md:text-base font-semibold divide-y divide-white divide-dashed bg-indigo-900 px-4 pb-2 rounded-b-lg">
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-cyan-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/3_onderwijs/propedeuse/" class="block w-full hover:text-gray-400">HBO-ICT Propedeuse</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-cyan-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/3_onderwijs/se/" class="block w-full hover:text-gray-400">Software Engineering</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-cyan-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/3_onderwijs/bim/" class="block w-full hover:text-gray-400">Business IT & Management</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-cyan-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/3_onderwijs/gd/" class="block w-full hover:text-gray-400">Game Development</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-cyan-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/3_onderwijs/cs/" class="block w-full hover:text-gray-400">Cyber Security</a>
+                            </li>
+                            <li class="flex py-2">
+                                <div class="w-0 h-0 border-t-[8px] border-t-transparent border-l-[13px] border-l-cyan-500 border-b-[8px] border-b-transparent mt-1 md:mt-1.5 mr-2"></div>
+                                <a href="/3_onderwijs/ti/" class="block w-full hover:text-gray-400">Technische Informatica</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </header>
+    </div>
+
+    <footer class="fixed flex justify-between bg-white bottom-0 h-20 w-full z-10">
+        <div></div>
+        <div><img src="./images/logos/HvA_payoff_zwart_RGB.png" class="h-20" /></div>
+    </footer>
+
+    {% block config %}
+      {%- set app = {
+        "base": base_url,
+        "features": features,
+        "translations": {},
+        "search": "assets/javascripts/workers/search.b8dbb3d2.min.js" | url
+      } -%}
+      {%- if config.extra.version -%}
+        {%- set mike = config.plugins.get("mike") -%}
+        {%- if not mike or mike.config.version_selector -%}
+          {%- set _ = app.update({ "version": config.extra.version }) -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- if config.extra.tags -%}
+        {%- set _ = app.update({ "tags": config.extra.tags }) -%}
+      {%- endif -%}
+      {%- set translations = app.translations -%}
+      {%- for key in [
+        "clipboard.copy",
+        "clipboard.copied",
+        "search.result.placeholder",
+        "search.result.none",
+        "search.result.one",
+        "search.result.other",
+        "search.result.more.one",
+        "search.result.more.other",
+        "search.result.term.missing",
+        "select.version"
+      ] -%}
+        {%- set _ = translations.update({ key: lang.t(key) }) -%}
+      {%- endfor -%}
+      <script id="__config" type="application/json">
+        {{- app | tojson -}}
+      </script>
+    {% endblock %}
+    {% block scripts %}
+      <script src="{{ 'assets/javascripts/bundle.3220b9d7.min.js' | url }}"></script>
+      {% for script in config.extra_javascript %}
+        {{ script | script_tag }}
+      {% endfor %}
+    {% endblock %}
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+
+        const showHideSearchResults = (event) => {
+            if(searchInput.value.length > 0) {
+                searchResults.classList.remove('hidden');
+            } else {
+                searchResults.classList.add('hidden');
+            }
+        }
+
+        const searchResultsClick = (event) => {
+            if(!searchResults.contains(event.target) && !searchInput.contains(event.target)) {
+                searchResults.classList.add('hidden');
+            } else {
+                searchResults.classList.remove('hidden');
+            }
+        }
+
+        searchInput.addEventListener('change', showHideSearchResults);
+        searchInput.addEventListener('keyup', showHideSearchResults);
+        searchInput.addEventListener('keydown', showHideSearchResults);
+        window.addEventListener('click', searchResultsClick);
+
+
+        showHideSearchResults();
+    </script>
+    <style>
+        .md-search__output {
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+            overflow-y: auto;
+            border-end-start-radius: px2rem(2px);
+            border-end-end-radius: px2rem(2px);
+            top: 90px;
+            max-height: 400px;
+            box-shadow: 0 0.2rem 0.5rem #0003, 0 0 0.05rem #00000059;
+            scrollbar-width: thin;
+            scrollbar-color: #00000052 #0000;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .md-search__output {
+                top: 75px;
+            }
+        }
+
+        .md-search__output .md-search__scrollwrap {
+            backface-visibility: hidden;
+            background-color: #ffffff;
+            height: 100%;
+            touch-action: pan-y;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result {
+            color: #000;
+            word-break: break-word;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__meta {
+            background-color: #00000012;
+            color: #0000008a;
+            font-size: .64rem;
+            line-height: 1.8rem;
+            padding: 0 .8rem;
+            padding-left: 0.8rem;
+            scroll-snap-align: start;
+            display: none;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__list .md-search-result__item {
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__list .md-search-result__item .md-search-result__link {
+            display: block;
+            outline: none;
+            scroll-snap-align: start;
+            transition: background-color .1s;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__list .md-search-result__item .md-search-result__link .md-search-result__article {
+            color: #0000008a;
+            font-size: .64rem;
+            line-height: 1.6;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__list .md-search-result__item .md-search-result__link .md-search-result__article .md-search-result__icon {
+            background-color: currentcolor;
+            content: "";
+            display: inline-block;
+            height: 100%;
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            width: 100%;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__list .md-search-result__item h1 {
+            color: #000000de;
+            font-size: .8rem;
+            font-weight: 400;
+            line-height: 1.4;
+            margin: .55rem 0;
+        }
+
+        .md-search__output .md-search__scrollwrap .md-search-result .md-search-result__list .md-search-result__item summary {
+            cursor: pointer;
+            display: block;
+            outline: none;
+            position: sticky;
+            scroll-snap-align: start;
+            top: 0;
+            z-index: 1;
+        }
+
+        .md-search-result__more {
+            display: none;
+        }
+
+        .md-search-result__icon {
+            display: none !important;
+        }
+
+        .md-search-result__item > a.md-search-result__link:not(:first-child) {
+            display: none !important;
+        }
+
+        .md-search-result__item h1 {
+            margin: 0 !important;
+            padding: 10px;
+        }
+
+        .md-search-result__article > *:not(h1) {
+            display: none !important;
+        }
+
+        .md-search-result__link:hover {
+            background-color: #00000012;
+        }
+    </style>
+</body>
+</html>
