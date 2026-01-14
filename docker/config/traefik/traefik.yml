@@ -1,0 +1,68 @@
+entryPoints:
+  websecure:
+    address: ':443'
+  web:
+    address: ':80'
+
+providers:
+  docker: {}
+  file:
+    filename: '/etc/traefik/traefik.yml'
+    watch: true
+
+certificatesResolvers:
+  le:
+    acme:
+      email: sebaskoedam26@gmail.com
+      storage: /acme.json
+      tlsChallenge: {}
+
+log:
+  level: INFO
+
+accessLog:
+  format: common
+
+http:
+  routers:
+    frontend:
+      rule: 'Host(`cmb.blockleven.nl`)'
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: le
+      service: frontend-service
+
+    backend:
+      rule: 'Host(`cmb.blockleven.nl`) && PathPrefix(`/api`)'
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: le
+      service: backend-service
+
+    grafana:
+      rule: 'Host(`grafana.blockleven.nl`)'
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: le
+      service: grafana-service
+
+  services:
+    frontend-service:
+      loadBalancer:
+        servers:
+          - url: 'http://frontend:80'
+    backend-service:
+      loadBalancer:
+        servers:
+          - url: 'http://node:3000'
+
+    grafana-service:
+      loadBalancer:
+        servers:
+          - url: 'http://grafana:3000'

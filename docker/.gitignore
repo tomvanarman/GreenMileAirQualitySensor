@@ -1,0 +1,5 @@
+config/mariadb
+data/grafana
+config/traefik/acme.json
+
+data/certs/

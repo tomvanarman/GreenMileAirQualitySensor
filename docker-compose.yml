@@ -1,0 +1,68 @@
+services:
+  node:
+    build:
+      context: ./web/backend
+      dockerfile: ../../docker/images/node/Dockerfile
+    container_name: cmb-node
+    env_file:
+      - .env
+    depends_on:
+      - mariadb
+
+  frontend:
+    build:
+      context: ./web/frontend
+      dockerfile: ../../docker/images/frontend/Dockerfile
+    container_name: cmb-frontend
+    env_file:
+      - .env
+    volumes:
+      - ./docker/config/frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+
+
+  mariadb:
+    image: mariadb:latest
+    container_name: cmb-mariadb
+    ports:
+      - '${MARIADB_PORT}:3306'
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+
+    volumes:
+      - 'mariadb-data:/var/lib/mysql'
+      - './data:/var/greenmile/data'
+      - './data/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro'
+
+  grafana:
+    image: grafana/grafana
+    container_name: cmb-grafana
+    ports:
+      - '${GRAFANA_PORT}:3000'
+    environment:
+      - GF_SERVER_ROOT_URL=http://localhost
+      - GF_PATHS_CONFIG=/var/greenmile/config/grafana.ini
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - 'grafana-data:/var/lib/grafana'
+      - './docker/config/grafana:/var/greenmile/config'
+
+  traefik:
+    image: traefik:3.5.3
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./docker/config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./docker/config/traefik/certs/ca.crt:/etc/traefik/certs/ca.crt:ro
+      - ./docker/config/traefik/acme.json:/acme.json
+    command:
+      - "--log.level=DEBUG"
+
+volumes:
+  grafana-data:
+  mariadb-data:
