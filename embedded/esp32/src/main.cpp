@@ -489,7 +489,7 @@ void HandleBatteryLogic()
   // Try to send queued data
   while (!postQueue.empty())
   {
-    if (trySendQueue(SHT41path))
+    if (trySendQueue(BatteryPath))
     {
       DEBUG_INFO("Successfully sent queued data");
       DEBUG_KV("Remaining queue size", postQueue.size());
