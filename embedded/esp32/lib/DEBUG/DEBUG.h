@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 // Toggle debug logging globally
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG
 #define DEBUG_LOG(x) Serial.print(x)

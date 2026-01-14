@@ -28,7 +28,7 @@
 #include "WifiManager.h"
 #include "HttpManager.h"
 
-bool useSIM = false;
+bool useSIM = true;
 
 // Server configuration for HTTPS POST
 const char *host = "greenmile.tapp.city";
@@ -39,8 +39,8 @@ const char *BatteryPath = "/api/data/battery";
 
 // Timing constants (in milliseconds)
 constexpr unsigned long kReconnectInterval = 6000;
-constexpr unsigned long kDataTransmissionInterval = 10000;
-constexpr unsigned long kDataMeasurementInterval = 2000;
+constexpr unsigned long kDataTransmissionInterval = 30000;
+constexpr unsigned long kDataMeasurementInterval = 10000;
 
 // Global objects
 SIM7080 sim7080("iot.1nce.net"); // APN for 1NCE IoT SIM cards
@@ -58,24 +58,24 @@ SHT41Sensor sht41;
 LEDStrip strip;
 SegmentDisplay segmentDisplay(11, 12, 10); // Data, CLK, CS pins
 
-// float maxPM = 250.0f;
-// GradientStop stops[] = {
-//     {0.0f / maxPM, 0, 255, 0},      // green
-//     {50.0f / maxPM, 255, 255, 0},   // yellow
-//     {100.0f / maxPM, 255, 165, 0},  // orange
-//     {150.0f / maxPM, 255, 0, 0},    // red
-//     {250.0f / maxPM, 128, 0, 0},  // maroon
-// };
-
-// For debugging purposes
-float maxPM = 25.0f;
+float maxPM = 250.0f;
 GradientStop stops[] = {
-    {0.0f / maxPM, 0, 255, 0},    // green
-    {5.0f / maxPM, 255, 255, 0},  // yellow
-    {10.0f / maxPM, 255, 165, 0}, // orange
-    {15.0f / maxPM, 255, 0, 0},   // red
-    {25.0f / maxPM, 128, 0, 0},   // maroon
+    {0.0f / maxPM, 0, 255, 0},      // green
+    {50.0f / maxPM, 255, 255, 0},   // yellow
+    {100.0f / maxPM, 255, 165, 0},  // orange
+    {150.0f / maxPM, 255, 0, 0},    // red
+    {250.0f / maxPM, 128, 0, 0},  // maroon
 };
+
+// // For debugging purposes
+// float maxPM = 25.0f;
+// GradientStop stops[] = {
+//     {0.0f / maxPM, 0, 255, 0},    // green
+//     {5.0f / maxPM, 255, 255, 0},  // yellow
+//     {10.0f / maxPM, 255, 165, 0}, // orange
+//     {15.0f / maxPM, 255, 0, 0},   // red
+//     {25.0f / maxPM, 128, 0, 0},   // maroon
+// };
 
 ColorMap colorMap(maxPM, stops);
 
@@ -93,7 +93,7 @@ void HandleSPS30Logic();
 void HandleSHT41Logic();
 void HandleBatteryLogic();
 bool trySendQueue(const char *path);
-void initializeTime();
+bool initializeTime();
 uint64_t getCurrentTimestampMs();
 int determineBatteryLevel();
 
@@ -109,6 +109,32 @@ void setup()
 
   DEBUG_SECTION("Setup");
 
+  // ============================================================================
+  // Setup credentials
+  // ============================================================================
+  strip.startLoading(CRGB::DarkRed, LEDStrip::_loadingModeType::BREATHING);
+  credential_manager.LoadCredentials();
+
+  if (!credential_manager.ValidateCredentials())
+  {
+    DEBUG_WARN("Invalid or missing credentials, starting AP for configuration...");
+    server.StartAP();
+
+    strip.stopLoading();
+    strip.startLoading(CRGB::DarkRed, LEDStrip::_loadingModeType::BLINKING);
+
+    segmentDisplay.start();
+    segmentDisplay.setIPAddress("192.168.4.1");
+
+    // Wait indefinitely in AP mode until configured
+    while (true)
+    {
+      server.HandleRequests();
+      delay(10);
+    }
+  }
+
+  strip.stopLoading();
   strip.startLoading(CRGB::Purple, LEDStrip::_loadingModeType::BREATHING);
 
   if (useSIM)
@@ -132,27 +158,6 @@ void setup()
   }
   else
   {
-    credential_manager.LoadCredentials();
-
-    if (!credential_manager.ValidateCredentials())
-    {
-      DEBUG_WARN("Invalid or missing credentials, starting AP for configuration...");
-      server.StartAP();
-
-      strip.stopLoading();
-      strip.startLoading(CRGB::Purple, LEDStrip::_loadingModeType::BLINKING);
-
-      segmentDisplay.start();
-      segmentDisplay.setIPAddress("192.168.4.1");
-
-      // Wait indefinitely in AP mode until configured
-      while (true)
-      {
-        server.HandleRequests();
-        delay(10);
-      }
-    }
-
     //============================================================================
     // Setup WiFi
     //============================================================================
@@ -177,8 +182,20 @@ void setup()
       }
     }
 
+    //============================================================================
+    // Setup time when using WiFi
+    //============================================================================
+    strip.stopLoading();
+    strip.startLoading(CRGB::Goldenrod, LEDStrip::_loadingModeType::BREATHING);
+
     // Initialize NTP time synchronization
-    initializeTime();
+    if (!initializeTime())
+    {
+      DEBUG_WARN("Failed to setup time");
+
+      strip.stopLoading();
+      strip.startLoading(CRGB::Goldenrod, LEDStrip::_loadingModeType::BLINKING);
+    }
   }
 
   strip.stopLoading();
@@ -223,17 +240,14 @@ void setup()
 
   // Initialize segment display
   segmentDisplay.start();
-  // int batteryLevel = determineBatteryLevel();
-  // segmentDisplay.setBattery(batteryLevel);
-  // delay(3000);
   segmentDisplay.clearDisplay();
 }
 
 void loop()
 {
-  HandleSPS30Logic();
   HandleSHT41Logic();
-  // HandleBatteryLogic();
+  HandleSPS30Logic();
+  HandleBatteryLogic();
 }
 
 void HandleSPS30Logic()
@@ -264,7 +278,7 @@ void HandleSPS30Logic()
 
   // Update LED strip based on PM2.5 value
   Color c = colorMap.DataToColor(spsData.mc_2p0);
-  strip.toColor(CRGB(c.r, c.g, c.b), 50);
+  strip.toColor(CRGB(c.r, c.g, c.b), 5000);
 
   if (!can_update)
     return;
@@ -420,7 +434,6 @@ void HandleSHT41Logic()
   }
 }
 
-
 // Read out the batter
 void HandleBatteryLogic()
 {
@@ -522,10 +535,10 @@ bool trySendQueue(const char *path)
     }
 
     if (sim7080.httpPost(credential_manager.GetDeviceID().c_str(),
-                         signature.c_str(), 
-                         host, 
-                         path, 
-                         url, 
+                         signature.c_str(),
+                         host,
+                         path,
+                         url,
                          current.c_str()))
     {
       postQueue.pop_front();
@@ -548,7 +561,7 @@ bool trySendQueue(const char *path)
   return false;
 }
 
-void initializeTime()
+bool initializeTime()
 {
   DEBUG_SECTION("NTP Sync");
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1, ntpServer2);
@@ -561,6 +574,10 @@ void initializeTime()
   }
   DEBUG_OK("Time synchronized");
   DEBUG_KV("Current time", String(asctime(&timeinfo)));
+
+  delay(5000);
+
+  return true;
 }
 
 uint64_t getCurrentTimestampMs()
