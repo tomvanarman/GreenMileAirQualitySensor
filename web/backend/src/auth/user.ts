@@ -10,7 +10,6 @@ export async function logout(req: express.Request, res: express.Response): Promi
     return new Promise((resolve, rej) => {
         req.session.destroy(error => {
             // default cookie name
-            console.log('clearing cookie');
             res.clearCookie('connect.sid');
             if (error) {
                 rej(error);

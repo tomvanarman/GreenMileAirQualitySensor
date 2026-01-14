@@ -8,86 +8,86 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
-import { Route as RouteRouteImport } from './routes/route'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as DevicesRouteRouteImport } from './routes/devices/route';
+import { Route as RouteRouteImport } from './routes/route';
+import { Route as AuthLoginRouteImport } from './routes/auth/login';
 
-const DashboardRouteRoute = DashboardRouteRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const DevicesRouteRoute = DevicesRouteRouteImport.update({
+    id: '/devices',
+    path: '/devices',
+    getParentRoute: () => rootRouteImport,
+} as any);
 const RouteRoute = RouteRouteImport.update({
-  id: '/',
-  path: '',
-  getParentRoute: () => rootRouteImport,
-} as any)
+    id: '/',
+    path: '',
+    getParentRoute: () => rootRouteImport,
+} as any);
 const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
+    id: '/auth/login',
+    path: '/auth/login',
+    getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/dashboard': typeof DashboardRouteRoute
-  '/auth/login': typeof AuthLoginRoute
+    '/devices': typeof DevicesRouteRoute;
+    '/auth/login': typeof AuthLoginRoute;
 }
 export interface FileRoutesByTo {
-  '/dashboard': typeof DashboardRouteRoute
-  '/auth/login': typeof AuthLoginRoute
+    '/devices': typeof DevicesRouteRoute;
+    '/auth/login': typeof AuthLoginRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof RouteRoute
-  '/dashboard': typeof DashboardRouteRoute
-  '/auth/login': typeof AuthLoginRoute
+    __root__: typeof rootRouteImport;
+    '/': typeof RouteRoute;
+    '/devices': typeof DevicesRouteRoute;
+    '/auth/login': typeof AuthLoginRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/dashboard' | '/auth/login'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/dashboard' | '/auth/login'
-  id: '__root__' | '/' | '/dashboard' | '/auth/login'
-  fileRoutesById: FileRoutesById
+    fileRoutesByFullPath: FileRoutesByFullPath;
+    fullPaths: '/devices' | '/auth/login';
+    fileRoutesByTo: FileRoutesByTo;
+    to: '/devices' | '/auth/login';
+    id: '__root__' | '/' | '/devices' | '/auth/login';
+    fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  RouteRoute: typeof RouteRoute
-  DashboardRouteRoute: typeof DashboardRouteRoute
-  AuthLoginRoute: typeof AuthLoginRoute
+    RouteRoute: typeof RouteRoute;
+    DevicesRouteRoute: typeof DevicesRouteRoute;
+    AuthLoginRoute: typeof AuthLoginRoute;
 }
 
 declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
+    interface FileRoutesByPath {
+        '/devices': {
+            id: '/devices';
+            path: '/devices';
+            fullPath: '/devices';
+            preLoaderRoute: typeof DevicesRouteRouteImport;
+            parentRoute: typeof rootRouteImport;
+        };
+        '/': {
+            id: '/';
+            path: '';
+            fullPath: '';
+            preLoaderRoute: typeof RouteRouteImport;
+            parentRoute: typeof rootRouteImport;
+        };
+        '/auth/login': {
+            id: '/auth/login';
+            path: '/auth/login';
+            fullPath: '/auth/login';
+            preLoaderRoute: typeof AuthLoginRouteImport;
+            parentRoute: typeof rootRouteImport;
+        };
     }
-    '/': {
-      id: '/'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof RouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  RouteRoute: RouteRoute,
-  DashboardRouteRoute: DashboardRouteRoute,
-  AuthLoginRoute: AuthLoginRoute,
-}
+    RouteRoute: RouteRoute,
+    DevicesRouteRoute: DevicesRouteRoute,
+    AuthLoginRoute: AuthLoginRoute,
+};
 export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+    ._addFileChildren(rootRouteChildren)
+    ._addFileTypes<FileRouteTypes>();

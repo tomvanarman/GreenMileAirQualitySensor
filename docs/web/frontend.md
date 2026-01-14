@@ -13,7 +13,17 @@ Microsoft Authenticator).
 
 ### New Users
 
-Follow the "" section on how to create a new user. TODO.
+You can use a script to create a new user.
+
+1. Login to the server `ssh root@greenmile`
+2. Go to the code directory `cd cmb`
+3. Run the create user script and change the `username` and `password` to your own credentials.
+
+```bash
+bash scripts/create_user.sh "username" "password"
+```
+
+You will see a message indicating that a new user is created.
 
 Newly created users must setup their 2FA before they can access the application. After entering
 their username/password they will be shown a QR code that they can scan using their TOTP application
@@ -31,7 +41,7 @@ link to this page. Or download a QR code for this link to share with others.
 Enter a device name and hit "Register" to add a new device. Once you do this you will be shown the
 device's ID and its secret key. Make sure to copy the secret, it will only be shown once.
 
-![Registering a new device](../assets//devices/registering.png)
+![Registering a new device](../assets/devices/registering.png)
 
 ### Revoking a device
 

@@ -4,6 +4,7 @@ export type DeviceRow = {
     id: string;
     name: string;
     updated_at: string;
+    level?: number;
 };
 
 export const DeviceController = {

@@ -47,7 +47,7 @@ function RouteComponent() {
             setIsLoggedIn(true);
             setName(res.name);
             navigate({
-                to: '/dashboard',
+                to: '/devices',
             });
         }
     };

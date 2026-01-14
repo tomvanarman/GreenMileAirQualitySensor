@@ -4,7 +4,9 @@ import SPS30Model from './sps30';
 import SHT41Model from './sht41';
 import QualityModel from './quality';
 import DeviceModel from '../device/device';
+import BatteryModel from './battery';
 import { verifyDeviceHmac } from '../crypto';
+import { IS_PRODUCTION } from '../env';
 
 export const dataRouter = express.Router();
 
@@ -20,7 +22,7 @@ async function verifyDevice(
 ) {
     const deviceId = req.headers['x-device-id'] as string | null;
     const bodySignature = req.headers['x-signature'] as string | null;
-    console.log({ deviceId, bodySignature });
+    if (!IS_PRODUCTION) console.log({ deviceId, bodySignature });
 
     if (!deviceId || !bodySignature) {
         return res.status(401).json({ error: 'Missing device authentication headers' });
@@ -35,8 +37,9 @@ async function verifyDevice(
     }
     // verify body signature
     const isValid = await verifyDeviceHmac(bodySignature, req.rawBody, device.secret_hex);
-    console.log('Device HMAC valid:', isValid);
+    if (!IS_PRODUCTION) console.log('Device HMAC valid:', isValid);
     if (!isValid) {
+        console.error(`Invalid body signature for device ${deviceId}`);
         return res.status(401).json({ error: 'Invalid body signature' });
     }
     req.body.Device_id = deviceId;
@@ -54,17 +57,37 @@ dataRouter.post('/test', (req, res) => {
     });
 });
 
-dataRouter.post('/sps30', (req, res) => {
-    SPS30Model.insert(req.body);
-    res.status(204).end();
+dataRouter.post('/sps30', async (req, res) => {
+    try {
+        await Promise.all([SPS30Model.insert(req.body), QualityModel.calculateFromSPS30(req.body)]);
+        res.status(204).end();
+    } catch (error) {
+        console.log('Error processing SPS30 data:', error);
+        return res.status(500).end();
+    }
 });
 
-dataRouter.post('/sht41', (req, res) => {
-    SHT41Model.insert(req.body);
-    res.status(204).end();
+dataRouter.post('/sht41', async (req, res) => {
+    try {
+        await SHT41Model.insert(req.body);
+        res.status(204).end();
+    } catch (error) {
+        console.log('Error processing SHT41 data:', error);
+        return res.status(500).end();
+    }
 });
 
-dataRouter.post('/quality', (req, res) => {
-    QualityModel.insert(req.body);
-    res.status(204).end();
+dataRouter.post('/battery', async (req, res) => {
+    try {
+        await BatteryModel.insert(req.body);
+        res.status(204).end();
+    } catch (error) {
+        console.log('Error processing Battery data:', error);
+        return res.status(500).end();
+    }
 });
+
+// dataRouter.post('/quality', (req, res) => {
+//     QualityModel.insert(req.body);
+//     res.status(204).end();
+// });

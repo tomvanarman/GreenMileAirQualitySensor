@@ -38,7 +38,17 @@ export default class DeviceModel {
         return result.affectedRows > 0;
     }
     public static async getDevices(): Promise<DeviceRow[]> {
-        return await db().query('select id, name, updated_at from Device where revoked = 0', []);
+        return await db().query(
+            `
+            select d.id, d.name, d.updated_at, b.level from Device as d
+            left join DeviceBattery as b on d.id=b.Device_id
+            left join (
+                select Device_id, max(time_unix) as max_time from DeviceBattery group by Device_id
+            ) latest on latest.Device_id = b.Device_id and latest.max_time = b.time_unix
+            where d.revoked = 0;
+        `,
+            []
+        );
     }
     public static async getById(id: string): Promise<DeviceRow | null> {
         const rows = await db().query(

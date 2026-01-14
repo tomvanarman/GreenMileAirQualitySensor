@@ -104,6 +104,25 @@ CREATE TABLE IF NOT EXISTS `cmb`.`User` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `cmb`.`DeviceBattery`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cmb`.`DeviceBattery` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `level` INT NULL,
+  `time_unix` INT NOT NULL,
+  `Device_id` VARCHAR(24) NOT NULL,
+  PRIMARY KEY (`id`, `Device_id`),
+  CONSTRAINT `fk_DeviceBattery_Device1`
+    FOREIGN KEY (`Device_id`)
+    REFERENCES `cmb`.`Device` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_DeviceBattery_Device1_idx` ON `cmb`.`DeviceBattery` (`Device_id` ASC) VISIBLE;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

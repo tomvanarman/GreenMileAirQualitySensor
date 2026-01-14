@@ -2,11 +2,6 @@
 
 Since all services use Docker, this project can run on an OS that runs docker.
 
-## Server Specs
-
-We use a raspberry pi zero with 1GB of ram and it runs on `6.12.47+rpt-rpi-v8` Raspberry Pi OS
-server: 6.12.47.
-
 ## Deploying & Updating
 
 The application code lives in `~/cmb`. A deploy script can be used to start all services the first
@@ -19,17 +14,9 @@ But first the environment variables need to be set. See [security](/security/env
 ### Deploying
 
 ```bash
-cd cmb
-chmod +x scripts/deploy.sh
-./deploy.sh
+bash scripts/deploy.sh
 ```
 
-### Updating
-
-To update the code and services the `update.sh` script needs to be run.
-
-```bash
-cd cmb
-chmod +x scripts/update.sh
-./update.sh
-```
+This script will build the docker compose services, restart the containers that have changed, and
+then reloads nginx. After the script is done it might take a minute or two for the database and
+Grafana to finish loading.

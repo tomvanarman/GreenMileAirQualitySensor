@@ -70,16 +70,3 @@ Example request body:
     "time_unix": 1687425600
 }
 ```
-
-### POST /api/data/quality
-
-Insert a new air quality measurement.
-
-Example request body:
-
-```json
-{
-    "quality": 0.22,
-    "time_unix": 1687425600
-}
-```

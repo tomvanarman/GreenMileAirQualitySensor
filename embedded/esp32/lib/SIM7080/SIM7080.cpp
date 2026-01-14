@@ -75,6 +75,10 @@ void SIM7080::initialize()
     // TS Pin detection must be disabled, otherwise it cannot be charged
     _pmu.disableTSPinMeasure();
 
+    // Enable internal ADC detection
+    _pmu.enableBattDetection();
+    _pmu.enableBattVoltageMeasure();
+
     DEBUG_OK("Power chip initialized!");
 }
 
@@ -245,7 +249,7 @@ bool SIM7080::ensureConnected(uint32_t timeoutMs)
     return true;
 }
 
-bool SIM7080::httpPost(const char *host, const char *path, const char *url, const char *data)
+bool SIM7080::httpPost(const char *device_id, const char *signature, const char *host, const char *path, const char *url, const char *data)
 {
     DEBUG_SECTION("Starting HTTPS POST request");
 
@@ -333,6 +337,21 @@ bool SIM7080::httpPost(const char *host, const char *path, const char *url, cons
         return false;
     }
 
+    // Set custom authentication headers
+    _modem.sendAT("+SHAHEAD=\"X-Device-ID\",\"", device_id, "\"");
+    if (_modem.waitResponse() != 1)
+    {
+        DEBUG_FAIL("Set X-Device-ID header Failed!");
+        return false;
+    }
+
+    _modem.sendAT("+SHAHEAD=\"X-Signature\",\"", signature, "\"");
+    if (_modem.waitResponse() != 1)
+    {
+        DEBUG_FAIL("Set X-Signature header Failed!");
+        return false;
+    }
+
     _modem.sendAT("+SHAHEAD=\"Connection\",\"keep-alive\"");
     if (_modem.waitResponse() != 1)
     {
@@ -395,7 +414,7 @@ uint64_t SIM7080::getCurrentTimestampMs()
 
     String cclkLine;
     unsigned long start = millis();
-    while (millis() - start < 5000)  // 5s timeout
+    while (millis() - start < 5000) // 5s timeout
     {
         if (_modem.stream.available())
         {
@@ -405,7 +424,7 @@ uint64_t SIM7080::getCurrentTimestampMs()
             {
                 cclkLine = line;
             }
-            else if (line == "OK")  // end of response
+            else if (line == "OK") // end of response
             {
                 break;
             }
@@ -437,11 +456,11 @@ uint64_t SIM7080::getCurrentTimestampMs()
     // Fill tm structure
     struct tm timeinfo;
     timeinfo.tm_year = year + 2000 - 1900;
-    timeinfo.tm_mon  = month - 1;
+    timeinfo.tm_mon = month - 1;
     timeinfo.tm_mday = day;
     timeinfo.tm_hour = hour;
-    timeinfo.tm_min  = min - tzMinutes; // convert to UTC
-    timeinfo.tm_sec  = sec;
+    timeinfo.tm_min = min - tzMinutes; // convert to UTC
+    timeinfo.tm_sec = sec;
     timeinfo.tm_isdst = 0;
 
     time_t t = mktime(&timeinfo);
@@ -454,8 +473,12 @@ uint64_t SIM7080::getCurrentTimestampMs()
     return static_cast<uint64_t>(t) * 1000;
 }
 
+int SIM7080::getBatteryVoltage()
+{
+    return _pmu.getBattVoltage();
+}
+
 int SIM7080::getBatteryLevel()
 {
-    DEBUG_LOG("Battery level:" + String(_pmu.getBatteryPercent()));
     return _pmu.getBatteryPercent();
 }

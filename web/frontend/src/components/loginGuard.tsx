@@ -21,7 +21,7 @@ export function LoginGuard(Component: React.ComponentType<any>) {
                     if ('error' in res) {
                         setIsLoggedIn(false);
                         setIsLoading(false);
-                        navigate({ to: '..' });
+                        navigate({ to: '/auth/login' });
                     } else {
                         setIsLoading(false);
                         setIsLoggedIn(true);
@@ -31,7 +31,7 @@ export function LoginGuard(Component: React.ComponentType<any>) {
                 .catch(() => {
                     setIsLoggedIn(false);
                     setIsLoading(false);
-                    navigate({ to: '..' });
+                    navigate({ to: '/auth/login' });
                 });
         }, []);
 

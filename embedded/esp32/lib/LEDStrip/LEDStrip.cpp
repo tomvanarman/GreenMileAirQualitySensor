@@ -55,7 +55,7 @@ void LEDStrip::stopLoading()
 
   // Force reset of RMT
   FastLED.clear(true);
-  FastLED.setBrightness(64);
+  FastLED.setBrightness(200);
 
   FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(_leds, NUM_LEDS)
       .setCorrection(TypicalLEDStrip);
@@ -65,7 +65,7 @@ void LEDStrip::stopLoading()
 
 uint16_t calcDelay(int b)
 {
-    float t = 1.0f - (float)b / 128.0f;  
+    float t = 1.0f - (float)b / 200.0f;  
     t = t * t;                           
 
     const uint16_t minDelay = 1;
@@ -87,7 +87,7 @@ void LEDStrip::loadingAnimation()
       if (!_loadingActive)
         break;
 
-      FastLED.setBrightness(128);
+      FastLED.setBrightness(200);
       FastLED.show();
       vTaskDelay(100 / portTICK_PERIOD_MS);
 
@@ -110,7 +110,7 @@ void LEDStrip::loadingAnimation()
       if (!_loadingActive)
         break;
 
-      for (int b = 0; b < 128; b++)
+      for (int b = 0; b < 200; b++)
       {
         if (!_loadingActive)
           break;
@@ -120,7 +120,7 @@ void LEDStrip::loadingAnimation()
         vTaskDelay(calcDelay(b) / portTICK_PERIOD_MS);
       }
 
-      for (int b = 128; b >= 0; b--)
+      for (int b = 200; b >= 0; b--)
       {
         if (!_loadingActive)
           break;
