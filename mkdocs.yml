@@ -1,0 +1,33 @@
+site_name: "Smart Cities Group Project"
+
+theme:
+    name: material
+    custom_dir: mdocotion/
+    sidebar_color: '#f1f5f9'
+    logo: assets/logo.svg
+    favicon: "data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAPT09ADg4OACKiYgA////AGtrawDU1NQAlJSUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAVQIiIAAAIgBVAiIgAAAiAFUCEiAAACIAVQIiIAAAcABVAANgAABwAFUAA2AAB3AAYAADYAAHcABgAANgAAdwAGAAA2B3B3AAYAADAHcHcABgAAMAdwd3BmAAAAAHAHAAAAAAAAAAAAAAAAAABAAAAAAAAABEAAAAAAAABEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBAAAAgQAAAIEEAACBDAAAgQwAAIkeAADfHwAA/74AAP/8AAD/+AAA"
+    features:
+        - navigation.sections
+        - content.tabs.link
+
+plugins:
+    - search
+    - mermaid2
+    - awesome-pages
+    - mkdocs-video
+    - section-index
+    - autolinks
+    - macros:
+          modules: [mkdocs_macros_mdocotion]
+
+markdown_extensions:
+    - attr_list
+    - md_in_html
+    - fenced_code
+    - pymdownx.highlight:
+          linenums: true
+          use_pygments: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences
+
