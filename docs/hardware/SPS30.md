@@ -1,167 +1,120 @@
 # SPS30 
-## Hardware Component Integration
 
-## 1. Component Identification
-#### Component name: SPS30
-#### Manufacturer: Sensiron
-#### Exact model / variant: SPS30 2023/2024
-#### Module or bare IC: N/A
-#### Revision / batch (if known): 2023/2024
-- Datasheet / reference: [Product reference](https://sensirion.com/products/catalog/SPS30),[Product datasheet](https://cdn.sparkfun.com/assets/2/d/2/a/6/Sensirion_SPS30_Particulate_Matter_Sensor_v0.9_D1__1_.pdf)
-- Additional references: Drivers: [I2C](https://github.com/Sensirion/arduino-i2c-sps30),
-[UART](https://github.com/Sensirion/arduino-uart-sps30)
+  # SPS30 – Particulate Matter Sensor
 
+  ## 1. Component Overview
+  **Manufacturer:** Sensirion  
+  **Model:** SPS30 (2023/2024)  
+  **Revision/Batch:** 2023/2024  
+  **Type:** Module  
 
----
+  **References:**  
+  - [Product page](https://sensirion.com/products/catalog/SPS30)  
+  - [Datasheet](https://cdn.sparkfun.com/assets/2/d/2/a/6/Sensirion_SPS30_Particulate_Matter_Sensor_v0.9_D1__1_.pdf)  
+  - Drivers: [I2C](https://github.com/Sensirion/arduino-i2c-sps30), [UART](https://github.com/Sensirion/arduino-uart-sps30)
 
-## 2. Electrical Characteristics
-#### Supply voltage (nominal): 5.0v
-#### Supply voltage (min–max): 4.5-5.5v
+  ---
 
-#### Current consumption:
-  - Idle: <8 mA
-  - Peak: 80 mA
+  ## 2. Electrical Characteristics
+  | Property            | Value                        |
+  |---------------------|-----------------------------|
+  | Supply Voltage      | 5.0 V (4.5–5.5 V)           |
+  | Idle Current        | <8 mA                       |
+  | Peak Current        | 80 mA                       |
+  | Logic Level         | 3.3 V                       |
+  | Level Shifter Needed| No                          |
+  | Power Source        | ESP32 pin, buck-boosted 5.0 V|
 
-#### Logic level:
-  - &check; 3.3 V
-  - [ ] 5 V
-  - [ ] Mixed / tolerant
+  ---
 
-#### Level shifting required: [ ] Yes / &check; No
+  ## 3. Pinout & Wiring
+  ### 3.1 Pin Mapping
+  | Pin | Signal | Mainboard Pin | Direction | Notes                      |
+  |-----|--------|---------------|-----------|----------------------------|
+  | 1   | VDD    | BUCK          | –         |                            |
+  | 2   | SDA    | 8             | –         |                            |
+  | 3   | SCL    | 9             | –         |                            |
+  | 4   | SEL    | GND           | –         | Pull to GND for I²C        |
+  | 5   | GND    | GND           | –         |                            |
 
-#### Power source:
-  - [ ] Mainboard regulator
-  - [ ] External regulator
-  - &check; ESP32 pin, buck-boosted to 5.0v
+  ### 3.2 Pull-ups / Pull-downs
+  On component: No  
+  On mainboard: Yes  
+  Values: pulled to ground (down)  
+  Signals affected: I2C/UART
 
-#### Decoupling / filtering:
-  - Capacitors used: N/A
-  - Location: N/A
+  ---
 
----
+  ## 4. Communication Interface
+  +Protocol: I²C  
+  +Bus speed: 100 kbit/s  
+  +Address: 0x69  
+  +Configurable address pins: No  
+  +Clock stretching: No  
+  +Shared bus: Yes (with SHT41)
 
-## 3. Pinout & Wiring
+  ---
 
-### 3.1 Pin Mapping
-| Component Pin | Signal | Mainboard Pin | Direction | Notes                    |
-|---------------|--------|---------------|-----------|--------------------------|
-|              1|     VDD|           BUCK|           |                          |
-|              2|     SDA|              8|           |                          |
-|              3|     SCL|              9|           |                          |
-|              4|     SEL|            GND|           | Pull to GND to select I2C|
-|              5|     GND|            GND|           |                          |
+  ## 5. Mode & Control Pins
+  | Pin | Function | Default | Required    | Notes         |
+  |-----|----------|---------|-------------|---------------|
+  | 5   | SELECT   | FLOAT   | GND         | for I²C       |
 
-### 3.2 Pull-ups / Pull-downs
-#### Present on component: [ ] Yes / &check; No
-#### Present on mainboard: &check; Yes / [ ] No
-#### Values: pulled to ground (down)
-#### Signals affected: I2C/UART
+  +Mode selection: I²C/UART  
+  +Reset/Enable: N/A  
+  +Power-up: N/A
 
----
+  ---
 
-## 4. Communication Interface
-#### Protocol:
-  - &check; I²C
-  - [ ] SPI
-  - [ ] UART
-  - [ ] Other:
+  ## 6. Power-Up & Timing
+  +Startup delay: <8 s  
+  +Warm-up: ~5 s  
+  +Measurement interval: –  
+  +Blocking: Yes (measures only after warm-up)
 
-#### Bus speed / baud rate: 100 kbit/s
+  ---
 
-#### Address / chip select: 0x69
+  ## 7. Software Integration
+  +Driver/Library: N/A  
+  +Target platform: LilyGO T-SIM7080G-S3  
+  +ESP32 peripheral: I2C1 (I2C0 used by modem)  
+  +Initialization: N/A
 
-#### Configurable address pins: [ ] Yes / &check; No
+  ---
 
-#### Clock stretching: [ ] Yes / &check; No / [ ] Unknown
+  ## 8. Mechanical & Environmental
+  +Mounting: Against airflow  
+  +Clearance: N/A  
+  +Cable length: UART recommended for >20 cm  
+  +Environment: 10–40 °C, 0–95 %RH, airflow required
 
-#### Shared bus: &check; Yes / [ ] No
-  - Other devices: SHT41
+  ---
 
----
+  ## 9. Known Issues
+  +Failures: No measurement before/after warm-up  
+  +Power-cycling: N/A  
+  +ESP32-specific: N/A  
+  +Workarounds: N/A
 
-## 5. Mode & Control Pins
-| Pin | Function | Default State | Required State | Notes  |
-|-----|----------|---------------|----------------|--------|
-|    5|    SELECT|       FLOATING|   PULLED TO GND| for I²C|
+  ---
 
-#### Mode selection (e.g. I²C / UART): I²C/UART
-#### Reset / enable behavior: N/A
-#### Power-up requirements: N/A
+  ## 10. Validation & Testing
+  +Test method: Measurement if sensor is detected  
+  +Expected behavior: Sensor provides measurements  
+  +Voltage/Current: N/A  
+  +Criteria: Pass when measurement is received
 
----
+  ---
 
-## 6. Power-Up & Timing Behavior
-#### Startup delay before communication: <8s
+  ## 11. References & Diagrams
+  +Schematic: N/A  
+  +Wiring: N/A  
+  +Photos: N/A  
+  +Logic Analyzer: N/A
 
-#### Warm-up time (if applicable): ~5s
+  ---
 
-#### Measurement / update interval:
-
-#### Blocking behavior:
-  - &check; Blocking, will not measure without warm-up
-  - [ ] Non-blocking
-
----
-
-## 7. Software Integration Notes
-#### Driver / library used: N/A
-
-#### Target platform: LilyGO T-SIM7080G-S3 
-
-#### ESP32 peripheral used:
-  - [ ] I2C0
-  - &check; I2C1
-  - [ ] UART #
-
-#### GPIO constraints / boot pins avoided: I2C1 is used because I2C0 is already in use by the modem
-
-#### Required initialization sequence: N/A
-
----
-
-## 8. Mechanical & Physical Considerations
-#### Mounting orientation: Against airflow
-
-#### Clearance requirements: N/A
-
-#### Cable length limits: use UART above 20cm of cable length
-
-#### Environmental constraints:
-  - Temperature: 10 to 40 °C (optimal)
-  - Humidity: 0 to 95 %RH (non-condensing)
-  - Airflow: required
-
----
-
-## 9. Known Issues & Caveats
-#### Observed failures: during/before warm up cycle will not give any measurement
-
-#### Power-cycling requirements: N/A
-
-#### ESP32-specific issues: N/A
-
-#### Workarounds implemented: N/A
-
----
-
-## 10. Validation & Testing
-#### Test method: The software will attempt to do a measurement if sensor is detected
-#### Expected behavior: The sensor is connected and outputs measurements.
-#### Measured voltages: N/A
-#### Measured current: N/A
-#### Pass / fail criteria: pass, when measurement is received.
-
----
-
-## 11. Diagrams & References
-#### Schematic snippet: N/A
-#### Wiring diagram: N/A
-#### Photos: N/A
-#### Logic analyzer / scope captures: N/A
-
----
-
-### Change Log
-| Date    | Change    | Reason    |
-|---------|-----------|-----------|
-| 17-12-25| Population|       init|
+  ## Change Log
+  | Date      | Change      | Reason     |
+  |-----------|-------------|------------|
+  | 2025-12-25| Population  | init       |

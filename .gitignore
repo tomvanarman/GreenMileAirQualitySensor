@@ -7,3 +7,5 @@ web/node_modules/
 
 docker/config/mosquitto/certs
 docker/config/traefik/acme.json
+
+.clang-format

@@ -1,6 +1,9 @@
 #include "SHT41Sensor.h"
 #include "DEBUG.h"
 
+
+#include "HelpMethod.h"
+
 SHT41Sensor::SHT41Sensor() {}
 
 bool SHT41Sensor::begin(TwoWire &wire, uint8_t maxRetries) {
@@ -19,10 +22,10 @@ bool SHT41Sensor::begin(TwoWire &wire, uint8_t maxRetries) {
     SHT41Data data = readData(2);
     if (data.available) {
       DEBUG_OK("SHT41 initialized successfully");
-      delay(4600); // Wait for sensor to stabilize
+      wait(4600); // Wait for sensor to stabilize
       return true;
     }
-    delay(100 * (attempt + 1));
+    wait(100 * (attempt + 1));
     DEBUG_WARN(String("SHT41 init attempt ") + String(attempt + 1) + " failed");
   }
 
@@ -51,7 +54,7 @@ SHT41Data SHT41Sensor::readData(uint8_t maxRetries) {
       return data;
     }
 
-    delay(50 * (attempt + 1));
+    wait(50 * (attempt + 1));
     DEBUG_WARN(String("SHT41 read attempt ") + String(attempt + 1) + " failed");
   }
   DEBUG_FAIL("Failed to read from sensor after retries");

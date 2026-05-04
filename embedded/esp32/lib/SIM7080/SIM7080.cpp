@@ -2,6 +2,7 @@
 #include "utilities.h"
 #define TINY_GSM_RX_BUFFER 1024 // Set RX buffer to 1Kb
 #define SerialAT Serial1
+#include <HelpMethod.h>
 
 #define TINY_GSM_MODEM_SIM7080
 #include <TinyGsmClient.h>
@@ -52,7 +53,7 @@ void SIM7080::initialize()
         DEBUG_FAIL("Failed to initialize power chip...");
         while (1)
         {
-            delay(5000);
+            wait(5000);
         }
     }
 
@@ -61,7 +62,7 @@ void SIM7080::initialize()
     {
         _pmu.disableDC3();
         // Wait a minute
-        delay(200);
+        wait(200);
     }
 
     // Set the working voltage of the modem, please do not modify the parameters
@@ -102,9 +103,9 @@ void SIM7080::startModem()
         {
             // Pull down PWRKEY for more than 1 second according to manual requirements
             digitalWrite(BOARD_MODEM_PWR_PIN, LOW);
-            delay(100);
+            wait(100);
             digitalWrite(BOARD_MODEM_PWR_PIN, HIGH);
-            delay(1000);
+            wait(1000);
             digitalWrite(BOARD_MODEM_PWR_PIN, LOW);
 
             retry = 0;
@@ -172,7 +173,7 @@ void SIM7080::setupNetwork()
                 DEBUG_FAIL("Network registration timeout");
                 return;
             }
-            delay(1000);
+            wait(1000);
         }
     } while (s != REG_OK_HOME && s != REG_OK_ROAMING);
     DEBUG_KV("Network register info:", register_info[s]);
@@ -244,7 +245,7 @@ bool SIM7080::ensureConnected(uint32_t timeoutMs)
             DEBUG_OK("Connection re-established");
             break;
         }
-        delay(5000);
+        wait(5000);
     }
     return true;
 }
