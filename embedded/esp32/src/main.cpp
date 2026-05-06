@@ -31,6 +31,8 @@
 #include "HttpManager.h"
 #include "NetworkServer.h"
 #include "WifiManager.h"
+#include "esp_event.h"
+#include "mqtt_client.h"
 
 bool useSIM = false;
 
@@ -41,18 +43,29 @@ const char *SPS30path = "/api/data/sps30";
 const char *SHT41path = "/api/data/sht41";
 const char *BatteryPath = "/api/data/battery";
 
+// Server config for MQTT 
+const char* MQTT_URI = "mqtt://greenmile.tapp.city";
+const char *MQTT_HOST = "greenmile.tapp.city";
+uint32_t MQTT_PORT    = 1883;
+
+//const char* MQTT_TOPIC    = "climate-box/#"; //doesnt need to listen to topics, only publish
+char MQTT_PUBLISH_TOPIC_SPS30[64];
+char MQTT_PUBLISH_TOPIC_SHT41[64];
+char MQTT_PUBLISH_TOPIC_BATTERY[64];
+
 // Timing constants
 constexpr unsigned long kReconnectInterval = 6000;
 constexpr unsigned long kDataTransmissionInterval = 10000;
 constexpr unsigned long kDataMeasurementInterval = 2000;
 
 // Global objects
-SIM7080 sim7080("iot.1nce.net"); // APN for 1NCE IoT SIM cards
+SIM7080 sim7080("iot.1nce.net", MQTT_HOST, MQTT_PORT); // APN for 1NCE IoT SIM cards
 
 CredentialManager credential_manager;
 NetworkServer server(credential_manager);
 WiFiManager network(credential_manager);
 HttpManager httpManager;
+esp_mqtt_client_handle_t client;
 
 TwoWire WireSensors = TwoWire(1);
 
@@ -89,6 +102,7 @@ bool sendPayload(const char *path, const String &payload);
 void initializeTime();
 uint64_t getCurrentTimestampMs();
 int determineBatteryLevel();
+static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data);
 
 void setup() {
   Serial.begin(115200);
@@ -103,15 +117,26 @@ void setup() {
 
   strip.startLoading(CRGB::Purple, LEDStrip::_loadingModeType::BREATHING);
 
+  handler.setupCredentialManager(credential_manager, server, strip,
+  segmentDisplay);
+  
+  snprintf(MQTT_PUBLISH_TOPIC_SPS30, sizeof(MQTT_PUBLISH_TOPIC_SPS30), 
+  "greenmile/%s/sps30/data", credential_manager.GetDeviceID().c_str());
+
+  snprintf(MQTT_PUBLISH_TOPIC_SHT41, sizeof(MQTT_PUBLISH_TOPIC_SHT41), 
+  "greenmile/%s/sht41/data", credential_manager.GetDeviceID().c_str());
+
+  snprintf(MQTT_PUBLISH_TOPIC_BATTERY, sizeof(MQTT_PUBLISH_TOPIC_BATTERY), 
+  "greenmile/%s/battery/data", credential_manager.GetDeviceID().c_str());
+
+
   if (useSIM) {
     // ============================================================================
     // Setup SIM7080
     // ============================================================================
     handler.setupSim7080(sim7080, strip);
   } else {
-    handler.setupCredentialManager(credential_manager, server, strip,
-                                   segmentDisplay);
-
+    
     //============================================================================
     // Setup WiFi
     //============================================================================
@@ -123,6 +148,19 @@ void setup() {
 
   strip.stopLoading();
   strip.clear();
+
+  //setup MQTT client
+  esp_mqtt_client_config_t mqtt_cfg = {};
+  
+  mqtt_cfg.host = MQTT_HOST;
+  mqtt_cfg.uri = MQTT_URI;
+  mqtt_cfg.port = MQTT_PORT;
+
+  client = esp_mqtt_client_init(&mqtt_cfg);
+  esp_mqtt_client_register_event(client, MQTT_EVENT_CONNECTED,    mqtt_event_handler, NULL);
+  esp_mqtt_client_register_event(client, MQTT_EVENT_DATA,         mqtt_event_handler, NULL);
+  esp_mqtt_client_register_event(client, MQTT_EVENT_DISCONNECTED, mqtt_event_handler, NULL);
+  esp_mqtt_client_start(client);
 
   // Initialize I2C communication
   WireSensors.begin(8, 9);      // SDA, SCL
@@ -379,13 +417,16 @@ bool HandleBatteryLogic() {
 }
 
 bool sendPayload(const char *path, const String &payload) {
-  auto [signatureOk, signature] = httpManager.signBody(
-      payload.c_str(), credential_manager.GetDeviceKey().c_str());
+  //there is no need for signing when using MQTT
+  //When wanting more security we need TLS with client certificates
 
-  if (!signatureOk) {
-    DEBUG_WARN("Failed to sign request body");
-    return false;
-  }
+  // auto [signatureOk, signature] = httpManager.signBody(
+  //     payload.c_str(), credential_manager.GetDeviceKey().c_str());
+
+  // if (!signatureOk) {
+  //   DEBUG_WARN("Failed to sign request body");
+  //   return false;
+  // }
 
   if (useSIM) {
     // TODO add signature logic to SIM7080 if needed
@@ -397,14 +438,19 @@ bool sendPayload(const char *path, const String &payload) {
       return false;
     }
 
-    if (sim7080.httpPost(credential_manager.GetDeviceID().c_str(),
-                         signature.c_str(), host, path, url, payload.c_str())) {
-      return true;
-    }
+    // if (sim7080.httpPost(credential_manager.GetDeviceID().c_str(),
+    //                      signature.c_str(), host, path, url, payload.c_str())) {
+    //   return true;
+    // }
+
+    sim7080.mqttPublish(credential_manager.GetDeviceID().c_str(), MQTT_PUBLISH_TOPIC_SPS30, payload.c_str());
   } else {
-    if (httpManager.post(String(credential_manager.GetDeviceID()),
-                         signature.c_str(), String(url), String(path),
-                         payload)) {
+    // if (httpManager.post(String(credential_manager.GetDeviceID()),
+    //                      signature.c_str(), String(url), String(path),
+    //                      payload)) {
+    //   return true;
+    // }
+    if(esp_mqtt_client_publish(client, MQTT_PUBLISH_TOPIC_SPS30, payload.c_str(), 0, 1, 0) > 0) {
       return true;
     }
   }
@@ -455,4 +501,40 @@ int determineBatteryLevel() {
   }
 
   return level;
+}
+
+// ─── MQTT event handler ───────────────────────
+
+static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
+  esp_mqtt_event_handle_t event = (esp_mqtt_event_handle_t) event_data;
+
+  switch ((esp_mqtt_event_id_t)event_id) {
+
+    case MQTT_EVENT_CONNECTED:
+      Serial.println("✅ MQTT connected");
+      // esp_mqtt_client_subscribe(client, MQTT_TOPIC, 0);
+      break;
+
+    case MQTT_EVENT_DATA: {
+      String topic;
+      for (int i = 0; i < event->topic_len; i++)
+        topic += (char)event->topic[i];
+
+      String msg;
+      for (int i = 0; i < event->data_len; i++)
+        msg += (char)event->data[i];
+
+      Serial.print("📩 Topic: "); Serial.println(topic);
+      Serial.print("📩 Msg:   "); Serial.println(msg);
+
+      break;
+    }
+
+    case MQTT_EVENT_DISCONNECTED:
+      Serial.println("❌ MQTT disconnected");
+      break;
+
+    default:
+      break;
+  }
 }

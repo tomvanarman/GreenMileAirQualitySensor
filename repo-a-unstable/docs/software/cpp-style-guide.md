@@ -86,7 +86,7 @@ const char* server;                         // Missing trailing underscore
 ### Constants
 
 - Use `k` prefix followed by `PascalCase` for constants
-- Use `constexpr` instead of `#define` when possible
+- Use `constexpr` instead of `define` when possible
 
 **Reference:**
 [Google Style Guide - Constant Names](https://google.github.io/styleguide/cppguide.html#Constant_Names)
@@ -226,7 +226,7 @@ Instead, we use the default formatting provided by Visual Studio Code.
 - Place at the very beginning of header files
 
 **Reference:**
-[Google Style Guide - The #define Guard](https://google.github.io/styleguide/cppguide.html#The__define_Guard)
+[Google Style Guide - The define Guard](https://google.github.io/styleguide/cppguide.html#The__define_Guard)
 
 ```cpp
 // Good
@@ -327,9 +327,9 @@ void Publish(const char* topic, const String& payload);
 WifiManager(const String& ssid, const String& password);
 ```
 
-### Prefer constexpr over #define
+### Prefer constexpr over define
 
-- Use `constexpr` for compile-time constants
+- Use `constexpr` instead of macro constants when possible
 - Provides type safety and scope
 
 ```cpp

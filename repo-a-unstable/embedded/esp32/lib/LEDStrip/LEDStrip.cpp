@@ -1,4 +1,6 @@
+
 #include "LEDStrip.h"
+#include "HelpMethod.h"
 
 void LEDStrip::setBrightness(uint8_t brightness)
 {
@@ -163,7 +165,7 @@ void LEDStrip::toColor(const CRGB &to, unsigned long durationMs)
     uint8_t b = _current_color.b + (uint8_t)((to.b - _current_color.b) * t);
     fillColor(CRGB(r, g, b));
     FastLED.show();
-    delay(10); // Small delay to allow for visible transition
+    wait(10); // Small delay to allow for visible transition
   }
 
   _current_color = to;
