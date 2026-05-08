@@ -3,12 +3,12 @@
 The entire project is containerized using Docker. This means that all services run in isolated
 containers. This makes it easy to deploy and update the services.
 
-See the [System Architecture](/architecture/system-architecture) for an overview of all services.
+See the [System Architecture](system-architecture.md) for an overview of all services.
 
 ## Configuration
 
 All services are configured using environment variables. See
-[Environment Variables](/security/environment-variables) for a list of all environment variables.
+[Environment Variables](../security/environment-variables) for a list of all environment variables.
 
 All docker configuration files are located in the `docker` directory.
 
@@ -21,7 +21,7 @@ All docker configuration files are located in the `docker` directory.
 ### Traeffik
 
 Traeffik is used as a reverse proxy and load balancer. It is the only service that is exposed
-outside of the docker network. See [network & SSL](/server/network-ssl) for more information.
+outside of the docker network. See [network & SSL](../server/network-ssl) for more information.
 
 ### Grafana
 

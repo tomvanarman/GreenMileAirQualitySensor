@@ -110,3 +110,50 @@
 - Conduct real-world testing with public interaction  
 - Deliver clear, accessible documentation for self-build  
 - Maintain current device size – no design changes needed
+
+## Intake wrote down 16.03.2026
+
+### Sensor Behavior
+- Sensors **do not require a warm-up period** and can be used immediately after startup.
+- **Measurement interval:** every **15 minutes** data is collected.
+- **Transmission interval:** data is sent **once per hour**.
+
+### Measurement Strategy
+- Measurement and transmission intervals are based on **national pollution standards**.
+- These standards help determine:
+  - how frequently measurements should be taken
+  - how frequently data should be transmitted.
+
+### Sprint Planning
+
+#### Sprint 1 – Setup & Deployment
+- **Deploy the first sensor box**.
+- If possible, **deploy a second unit**.
+- **Establish connection with the hardware board**.
+- Set up **Grafana** for data visualization.
+- Gather more information about **how the overall system architecture works**.
+
+##### Environments
+Two environments will be created:
+
+**Production**
+- Stable deployment version.
+- Intended for the **Marinetraijn location**.
+
+**Development**
+- Prototype environment.
+- Used for testing and development.
+
+#### Sprint 2 – Optimization & Improvements
+
+**Battery Efficiency**
+- Analyze and improve **battery consumption**.
+
+**Data Visualization**
+- Improve how **pollution data is displayed**.
+
+**Documentation**
+- Improve and properly structure **project documentation**.
+
+**External Integration**
+- Implement a **third-party API path** to allow external systems to access the collected data.

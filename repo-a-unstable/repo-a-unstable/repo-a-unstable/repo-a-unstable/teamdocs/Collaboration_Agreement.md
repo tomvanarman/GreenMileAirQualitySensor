@@ -298,6 +298,7 @@ All communication with the client will be in: English
 
 - Every Monday at 10 am in front of the Makerslab
 
+
 ---
 
 # 13. Signed by
@@ -311,3 +312,4 @@ This collaboration agreement was signed by:
 | Niklas Kiess | 03-03-2026 | Signed |
 | Shaan Nankoe | 04-03-2026 | Signed |
 | Thom Koper | 05-03-2026 | Signed |
+

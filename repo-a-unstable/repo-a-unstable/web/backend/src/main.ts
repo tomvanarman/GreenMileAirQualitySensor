@@ -17,8 +17,6 @@ export const client = mqtt.connect(mqttconnectUrl, {
   clientId: mqttclientId,
   clean: true,
   connectTimeout: 4000,
-  username: 'emqx',
-  password: 'public',
   reconnectPeriod: 1000,
 });
 
@@ -59,7 +57,7 @@ app.use(
 );
 
 client.on('connect', () => {
-    client.subscribe('climate-box/#', (err) => {
+    client.subscribe("climate-box/#", (err) => {
         if (err) {
             console.error('Failed to subscribe to MQTT topic:', err);
         } else {

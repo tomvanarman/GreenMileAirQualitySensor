@@ -90,6 +90,7 @@ dataRouter.post('/battery', async (req, res) => {
 });
 
 client.on('message', async (topic, message) => {
+    console.log(`Received MQTT message on topic ${topic}`);
     if (topic.endsWith('sps30/data')){
         try {
             const payload = JSON.parse(message.toString());
