@@ -8,7 +8,6 @@
 - The user story is in the verify column
 - Go through Acceptance Criteria and make sure the reviewer can check them off
 - Hyperlinks to relevant documentation on pages in the user story
-- Assign a reviewer based on the rotation schedule below
 
 ## **What does a reviewer do when reviewing a merge request?**
 
@@ -31,18 +30,3 @@ All acceptance criteria have been met:
 
 All Definition of Done criteria have been met:
 ```
-
-## **Who do you select to review the merge request**
-
-We rotate reviewers so that everyone gets a chance to review merge requests. Discuss with the team
-who should review your merge request. Rotation is per merge request.
-
-**Rotation schedule**
-
-| Reviewer | Amount of reviews |
-| -------- | ----------------- |
-| Sebas    |                   |
-| Sam      | .                 |
-| Anwar    |                   |
-| Brian    |                   |
-| Casper   | .                 |

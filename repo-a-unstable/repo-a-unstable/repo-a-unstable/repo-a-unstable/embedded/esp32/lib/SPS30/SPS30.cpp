@@ -1,5 +1,8 @@
 #include "SPS30.h"
 
+
+#include "HelpMethod.h"
+
 bool SPS30::begin(TwoWire &wire, uint8_t maxRetries, bool doScan)
 {
     if (_initialized)
@@ -7,6 +10,7 @@ bool SPS30::begin(TwoWire &wire, uint8_t maxRetries, bool doScan)
 
     _wire = &wire;
 
+    // Optinal I2C scan for checking correct wiring and debugging
     if (doScan)
     {
         DEBUG_SECTION("I2C Scan");
@@ -32,19 +36,19 @@ bool SPS30::begin(TwoWire &wire, uint8_t maxRetries, bool doScan)
         if (!initSPS30())
         {
             DEBUG_WARN(String("SPS30 init attempt ") + String(attempt + 1) + " failed");
-            delay(200 * (attempt + 1));
+            wait(200 * (attempt + 1));
             continue;
         }
 
         if (!startMeasurement())
         {
             DEBUG_WARN(String("SPS30 start attempt ") + String(attempt + 1) + " failed");
-            delay(200 * (attempt + 1));
+            wait(200 * (attempt + 1));
             continue;
         }
 
         DEBUG_INFO("SPS30 warming up (5s)...");
-        delay(4500);
+        wait(4500);
 
         _initialized = true;
         _measuring = true;
@@ -70,7 +74,7 @@ bool SPS30::initSPS30()
     {
         return false;
     }
-    delay(500);
+    wait(500);
     return true;
 }
 
@@ -136,7 +140,7 @@ SPS30_measurement SPS30::readData(uint8_t maxRetries)
     {
         if (!isDataReady())
         {
-            delay(200);
+            wait(200);
             continue;
         }
 
@@ -147,7 +151,7 @@ SPS30_measurement SPS30::readData(uint8_t maxRetries)
         }
 
         DEBUG_WARN(String("SPS30 read attempt ") + String(attempt + 1) + " failed");
-        delay(200 * (attempt + 1));
+        wait(200 * (attempt + 1));
     }
 
     DEBUG_FAIL("SPS30 read failed after retries");

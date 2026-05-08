@@ -1,13 +1,16 @@
 #include "NetworkServer.h"
 #include "DEBUG.h"
 
+
+#include "HelpMethod.h"
+
 // Starts a captive-like AP with a simple form to configure credentials.
 void NetworkServer::StartAP()
 {
     DEBUG_SECTION("AP Mode Start");
     WiFi.mode(WIFI_AP);
     WiFi.softAP("ESP_Config", "test1234");
-    delay(500);
+    wait(500);
 
     DEBUG_INFO("AP started. Connect to 192.168.4.1");
 
@@ -47,6 +50,6 @@ void NetworkServer::handleSave()
     credential_manager_.SaveCredentials(ssid, pass, device_id, device_key);
     DEBUG_OK("Credentials saved. Rebooting...");
     server_.send(200, "text/plain", "Credentials saved. Rebooting...");
-    delay(1000);
+    wait(1000);
     ESP.restart();
 }
