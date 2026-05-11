@@ -12,21 +12,28 @@
 #include "../SPS30/SPS30.h"
 #include "../SegmentDisplay/SegmentDisplay.h"
 #include "../WifiManager/WifiManager.h"
+#include "../RGBLight/RGBLight.h"
+#include "../Debug/Debug.h"
 
 class Handler {
 private:
   DeepSleepManager deepSleepManager;
+  TaskHandle_t rgbTaskHandle = nullptr;
+  static void rgbTask(void *pvParameters);
 
 public:
-  void setupSPS30(SPS30 &sps30, TwoWire &wire, LEDStrip &strip);
-  void setupSHT41(SHT41Sensor &sht41, TwoWire &wire, LEDStrip &strip);
-  void setupWifi(WiFiManager &network, NetworkServer &server, LEDStrip &strip,
-                 SegmentDisplay &segmentDisplay);
-  void setupSim7080(SIM7080 &sim7080, LEDStrip &strip);
+  void setupRGB(RGBLight &rgb);
+  void rgbInitialization(RGBLight &rgb);
+  void disableRGB(RGBLight &rgb);
+  void errorEncounteredRGB(RGBLight &rgb, SetupError error);
+  void setupSPS30(SPS30 &sps30, TwoWire &wire, RGBLight &rgb);
+  void setupSHT41(SHT41Sensor &sht41, TwoWire &wire, RGBLight &rgb);
+  void setupWifi(WiFiManager &network, NetworkServer &server, RGBLight &rgb);
+  void setupSim7080(SIM7080 &sim7080, RGBLight &rgb);
   void setupCredentialManager(CredentialManager &credential_manager,
-                              NetworkServer &server, LEDStrip &strip,
-                              SegmentDisplay &segmentDisplay);
+                              NetworkServer &server, RGBLight &rgb);
 
   void enterDeepSleep(LEDStrip &strip, SegmentDisplay &segmentDisplay,
                       bool useSIM);
+
 };

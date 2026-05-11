@@ -1,0 +1,11 @@
+.vscode/settings.json
+.venv/
+.env
+__pycache__/
+
+web/node_modules/
+
+docker/config/mosquitto/certs
+docker/config/traefik/acme.json
+
+.clang-format

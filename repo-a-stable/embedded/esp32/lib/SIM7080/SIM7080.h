@@ -5,13 +5,14 @@
 class SIM7080
 {
 public:
-    SIM7080(const char *apn) : apn_(apn) {}
+    SIM7080(const char *apn, const char *mqttHost, uint32_t mqttPort) : apn_(apn), mqttHost_(mqttHost), mqttPort_(mqttPort) {}
 
     // These methods should be called in order to initialize and use the modem
     void initialize();
     void startModem();
     void setupNetwork();
 
+    bool mqttPublish(const char *deviceId, const char *topic, const char *payload);
     // Perform an HTTPS POST request
     bool httpPost(const char *device_id, const char *signature, const char *host, const char *path, const char *url, const char *data);
 
@@ -29,4 +30,6 @@ public:
 
 private:
     const char *apn_;
+    const char *mqttHost_;
+    uint32_t mqttPort_;
 };

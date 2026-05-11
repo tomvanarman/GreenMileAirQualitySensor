@@ -18,6 +18,7 @@
 // Sensor Libraries
 #include "SHT41Sensor.h"
 #include "SPS30.h"
+#include "RGBLight.h"
 
 // Actuator Libraries
 #include "LEDStrip.h"
@@ -75,6 +76,7 @@ Handler handler;
 
 LEDStrip strip;
 SegmentDisplay segmentDisplay(11, 12, 10); // Data, CLK, CS pins
+RGBLight rgbLight(14, 13, 12); 
 
 // For debugging purposes
 float maxPM = 25.0f;
@@ -106,19 +108,16 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 
 void setup() {
   Serial.begin(115200);
-
-  Serial.println();
-  Serial.println("====================================");
-  Serial.println("Starting GreenMile Air Quality Sensor");
+  DEBUG_BLOCK("Starting GreenMile Air Quality Sensor");
 
   wait(5000); // Give some time to open the serial monitor after reset
 
   DEBUG_SECTION("Setup");
 
-  strip.startLoading(CRGB::Purple, LEDStrip::_loadingModeType::BREATHING);
+  handler.setupRGB(rgbLight);
+  handler.rgbInitialization(rgbLight);
 
-  handler.setupCredentialManager(credential_manager, server, strip,
-  segmentDisplay);
+  handler.setupCredentialManager(credential_manager, server, rgbLight);
   
   snprintf(MQTT_PUBLISH_TOPIC_SPS30, sizeof(MQTT_PUBLISH_TOPIC_SPS30), 
   "greenmile/%s/sps30/data", credential_manager.GetDeviceID().c_str());
@@ -134,20 +133,17 @@ void setup() {
     // ============================================================================
     // Setup SIM7080
     // ============================================================================
-    handler.setupSim7080(sim7080, strip);
+    handler.setupSim7080(sim7080, rgbLight);
   } else {
     
     //============================================================================
     // Setup WiFi
     //============================================================================
-    handler.setupWifi(network, server, strip, segmentDisplay);
+    handler.setupWifi(network, server, rgbLight);
 
     // Initialize NTP time synchronization
     initializeTime();
   }
-
-  strip.stopLoading();
-  strip.clear();
 
   //setup MQTT client
   esp_mqtt_client_config_t mqtt_cfg = {};
@@ -170,29 +166,24 @@ void setup() {
   //============================================================================
   // Setup SPS30
   //============================================================================
-  handler.setupSPS30(sps30, WireSensors, strip);
+  handler.setupSPS30(sps30, WireSensors, rgbLight);
 
   //============================================================================
   // Setup SHT41
   //============================================================================
-  handler.setupSHT41(sht41, WireSensors, strip);
-
-  strip.clear();
-
+  handler.setupSHT41(sht41, WireSensors, rgbLight);
   // Initialize LUT for color mapping
   colorMap.InitLUT();
 
   // Initialize segment display
-  segmentDisplay.start();
   // int batteryLevel = determineBatteryLevel();
   // segmentDisplay.setBattery(batteryLevel);
   // wait(3000);
-  segmentDisplay.clearDisplay();
+  handler.disableRGB(rgbLight);
 }
 
 void loop() {
-  Serial.println("Loop start");
-  Serial.println("=====================================");
+  DEBUG_BLOCK("Loop start");
 
   bool spsSent = HandleSPS30Logic();
   bool shtSent = HandleSHT41Logic();
@@ -511,7 +502,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
   switch ((esp_mqtt_event_id_t)event_id) {
 
     case MQTT_EVENT_CONNECTED:
-      Serial.println("✅ MQTT connected");
+      DEBUG_INFO("MQTT connected successfully");
       // esp_mqtt_client_subscribe(client, MQTT_TOPIC, 0);
       break;
 
@@ -524,14 +515,14 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
       for (int i = 0; i < event->data_len; i++)
         msg += (char)event->data[i];
 
-      Serial.print("📩 Topic: "); Serial.println(topic);
-      Serial.print("📩 Msg:   "); Serial.println(msg);
+      DEBUG_INFO("📩 Topic: " + topic);
+      DEBUG_INFO("📩 Msg:   " + msg);
 
       break;
     }
 
     case MQTT_EVENT_DISCONNECTED:
-      Serial.println("❌ MQTT disconnected");
+      DEBUG_INFO("MQTT disconnected from the broker");
       break;
 
     default:
