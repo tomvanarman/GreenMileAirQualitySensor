@@ -1,0 +1,1341 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../json-format/">
+      
+      
+        <link rel="next" href="../wifi-manager/">
+      
+      <link rel="icon" href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAPT09ADg4OACKiYgA////AGtrawDU1NQAlJSUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAVQIiIAAAIgBVAiIgAAAiAFUCEiAAACIAVQIiIAAAcABVAANgAABwAFUAA2AAB3AAYAADYAAHcABgAANgAAdwAGAAA2B3B3AAYAADAHcHcABgAAMAdwd3BmAAAAAHAHAAAAAAAAAAAAAAAAAABAAAAAAAAABEAAAAAAAABEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBAAAAgQAAAIEEAACBDAAAgQwAAIkeAADfHwAA/74AAP/8AAD/+AAA">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.20">
+    
+    
+      
+        <title>MqttClient Class Documentation - Smart Cities Group Project</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.eebd395e.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+	<link rel="stylesheet" href="../../assets/stylesheets/mdocotion.css" />
+	<script src="../../assets/javascripts/mdocotion.js"></script>
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mqttclient-class-documentation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+     
+	
+<header class="md-header" data-md-component="header">
+
+	<div class="header-inner">
+		<div class="header-info-bar">
+			<label class="md-header__button md-icon" for="__drawer"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg> </label>
+
+			<ul class="mdocotion-breadcrumbs">
+				<li><a href="../0_index/">Software</a><span class="breadcrumbs-seperator"></span></li>
+			</ul>
+		</div>
+
+		<ul class="mdocotion-header-nav">
+			<li>
+				
+				<label class="md-header__button md-icon" for="__search"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> </label>
+				<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+			</li>
+		</ul>
+	</div>
+</header> 
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+	
+		
+		
+			<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"  style="background: #f1f5f9;">
+		
+	
+		<div class="md-sidebar__scrollwrap">
+			<div class="md-sidebar__inner">
+			  
+<div class="mdocotion-nav-header">
+	<div class="mdocotion-nav-logo">
+		<a href="../.." >
+			
+  <img src="../../assets/logo.svg" alt="logo">
+
+		</a>
+		</div>
+	
+		Smart Cities Group Project
+	
+</div>
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+	<ul class="md-nav__list" data-md-scrollfix>
+		   
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        The Green Mile
+      </a>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../architecture/0_index/">Architecture</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../architecture/0_index/">Architecture</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/database/" class="md-nav__link">
+        Database
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/docker/" class="md-nav__link">
+        Docker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/system-architecture/" class="md-nav__link">
+        System Architecture
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                Assets
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../..">Assets</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/TEMPLATES/hardware_components/" class="md-nav__link">
+        TEMPLATES
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../design/0_index/">Design</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../design/0_index/">Design</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/GreenMileBracket/" class="md-nav__link">
+        The Bracket
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/setup_documentation/" class="md-nav__link">
+        Guide
+      </a>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../hardware/0_index/">Hardware</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../hardware/0_index/">Hardware</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/Fritzingscheme/" class="md-nav__link">
+        Green Mile Project – Hardware Architecture
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/LiFePo4/" class="md-nav__link">
+        LifePo4
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/SHT41/" class="md-nav__link">
+        SHT41
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/SIM7080G/" class="md-nav__link">
+        SIM7080G – Hardware Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/SPS30/" class="md-nav__link">
+        SPS30
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/Wiring-Documentation/" class="md-nav__link">
+        Wiring Documentation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/embedded-quickstart/" class="md-nav__link">
+        Embedded Hardware – Quickstart
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/embedded-requirements/" class="md-nav__link">
+        Embedded requirements
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/led-strip/" class="md-nav__link">
+        LED Strip
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/segment-display/" class="md-nav__link">
+        Segment Display
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../product/0_index/">Product</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../product/0_index/">Product</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../product/product-vision/" class="md-nav__link">
+        Product vision
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../security/0_index/">Security</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../security/0_index/">Security</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/environment-variables/" class="md-nav__link">
+        Environment Variables
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../server/0_index/">Server</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../server/0_index/">Server</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/esp32-portal/" class="md-nav__link">
+        CMB portal
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/network-ssl/" class="md-nav__link">
+        Network & SSL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/server-setup/" class="md-nav__link">
+        Server Setup
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../0_index/">Software</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../0_index/">Software</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ite-interface/" class="md-nav__link">
+        LTE chip (SIM7080G)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SHT41-doc/" class="md-nav__link">
+        Hardware interfacing | Temperature and humidity sensor (SHT41)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SPS30/" class="md-nav__link">
+        SPS30
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-style-guide/" class="md-nav__link">
+        C++ Style Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug-logger/" class="md-nav__link">
+        DEBUG Logger
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development-setup/" class="md-nav__link">
+        Development Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../json-format/" class="md-nav__link">
+        JSON Format
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        MqttClient Class Documentation
+      </a>
+      
+        
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wifi-manager/" class="md-nav__link">
+        WiFi Manager
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tests/battery-test/" class="md-nav__link">
+        Tests
+      </a>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../web/0_index/">Web</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../web/0_index/">Web</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../web/api/" class="md-nav__link">
+        API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../web/frontend/" class="md-nav__link">
+        Frontend
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../web/grafana/" class="md-nav__link">
+        Grafana
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../workflow/linting-formatting/">Workflow</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../workflow/linting-formatting/">Workflow</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/merge-requests/" class="md-nav__link">
+        Merge Requests Workflow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/stakeholder-validation-user-stories/" class="md-nav__link">
+        Stakeholder Validation with Ruth (Green Mile)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/how-to-scrum/how-to-scrum/" class="md-nav__link">
+        How to scrum
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+ 
+	</ul>
+</nav>
+			</div>
+		</div>
+		</div>
+	
+
+          
+
+	<div class="md-content" data-md-component="content">
+
+	<article class="mdocotion-content md-content__inner md-typeset">
+		<div class="mdocotion-content-scroller">
+			<main class="mdocotion-content-view">
+				<div class="mdocotion-content-block">
+					<div class="mdocotion-content-block-inner"> 
+
+
+<div><h1 id="mqttclient-class-documentation">MqttClient Class Documentation</h1>
+<h2 id="overview">Overview</h2>
+<p>The <code>MqttClient</code> class provides a simplified interface for MQTT operations on ESP32 devices. It
+handles connection management, message publishing, and automatic reconnection while integrating
+seamlessly with the WifiManager for network connectivity management.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li><strong>Simplified MQTT Interface</strong>: Easy-to-use wrapper around PubSubClient library</li>
+<li><strong>WiFi Dependency Management</strong>: Automatically checks WiFi connectivity before MQTT operations</li>
+<li><strong>Connection State Management</strong>: Handles MQTT connection lifecycle and status checking</li>
+<li><strong>Message Publishing</strong>: Publishes messages to MQTT topics with error handling</li>
+<li><strong>Automatic Reconnection</strong>: Provides reconnection capabilities for network recovery</li>
+<li><strong>Debug Logging</strong>: Comprehensive logging for connection status and message publishing</li>
+<li><strong>Keep-Alive Management</strong>: Maintains MQTT connection through regular loop processing</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li><strong>PubSubClient</strong>: Arduino MQTT library for ESP32</li>
+<li><strong>WiFi</strong>: ESP32 built-in WiFi functionality</li>
+<li><strong>WifiManager</strong>: Custom WiFi management class</li>
+<li><strong>DEBUG.h</strong>: Custom debug logging system</li>
+</ul>
+<h2 id="class-definition">Class Definition</h2>
+<pre class="highlight"><code class="language-cpp">class MqttClient {
+ public:
+  MqttClient(const char* server, int port, WifiManager&amp; wifi_manager);
+  void Connect();
+  void Disconnect();
+  void Reconnect();
+  void Publish(const char* topic, const String&amp; payload);
+  bool IsConnected();
+  void Loop();
+
+ private:
+  const char* server_;        // MQTT broker hostname/IP
+  int port_;                  // MQTT broker port
+  WifiManager&amp; wifi_manager_; // WiFi connectivity manager
+  WiFiClient esp_client_;     // Underlying WiFi client
+  PubSubClient client_;       // MQTT protocol implementation
+};</code></pre>
+<h2 id="constructor">Constructor</h2>
+<h3 id="mqttclientconst-char-server-int-port-wifimanager-wifi_manager"><code>MqttClient(const char* server, int port, WifiManager&amp; wifi_manager)</code></h3>
+<p>Creates a new MqttClient instance with the specified broker configuration.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>server</code>: MQTT broker hostname or IP address (must remain valid for object lifetime)</li>
+<li><code>port</code>: MQTT broker port number (typically 1883 for non-SSL, 8883 for SSL)</li>
+<li><code>wifi_manager</code>: Reference to WiFi manager for connectivity checks</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-cpp">WifiManager wifi("MyNetwork", "MyPassword");
+MqttClient mqtt("broker.example.com", 1883, wifi);</code></pre>
+<p><strong>Important Notes:</strong></p>
+<ul>
+<li>The <code>server</code> pointer must remain valid for the entire lifetime of the MqttClient object</li>
+<li>The <code>wifi_manager</code> reference is used to check WiFi connectivity before MQTT operations</li>
+</ul>
+<h2 id="public-methods">Public Methods</h2>
+<h3 id="void-connect"><code>void Connect()</code></h3>
+<p>Establishes connection to the MQTT broker using a fixed client ID.</p>
+<p><strong>Preconditions:</strong></p>
+<ul>
+<li>WiFi must be connected (<code>WiFi.isConnected()</code> returns true)</li>
+</ul>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Checks WiFi connectivity before attempting connection</li>
+<li>Sets MQTT server configuration</li>
+<li>Uses "ESP32Client" as the fixed client ID</li>
+<li>Logs connection attempts and results</li>
+<li>Gracefully handles already-connected state (no-op)</li>
+<li>Logs specific error codes on connection failure</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlight"><code class="language-cpp">wifi.Connect();  // Ensure WiFi is connected first
+mqtt.Connect();  // Then connect to MQTT broker
+
+if (mqtt.IsConnected()) {
+    // MQTT connection successful
+}</code></pre>
+<p><strong>Debug Output:</strong></p>
+<pre class="highlight"><code>Connecting MQTT server: broker.example.com on port: 1883
+Attempting MQTT connection...
+MQTT connected!</code></pre>
+<p><strong>Error Codes:</strong> Common MQTT connection error codes:</p>
+<ul>
+<li><code>-1</code>: Connection lost</li>
+<li><code>-2</code>: Connect failed</li>
+<li><code>-3</code>: Connection lost</li>
+<li><code>-4</code>: Connection timeout</li>
+<li><code>-5</code>: Connection refused, bad protocol</li>
+<li><code>-6</code>: Connection refused, bad client ID</li>
+</ul>
+<h3 id="void-disconnect"><code>void Disconnect()</code></h3>
+<p>Closes the MQTT connection gracefully.</p>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Only disconnects if currently connected (avoids unnecessary operations)</li>
+<li>Calls underlying PubSubClient disconnect method</li>
+<li>Logs disconnection status</li>
+<li>Safe to call when already disconnected</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlight"><code class="language-cpp">mqtt.Disconnect();
+// MQTT connection is now closed</code></pre>
+<h3 id="void-reconnect"><code>void Reconnect()</code></h3>
+<p>Attempts to reconnect to the MQTT broker.</p>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Checks WiFi connectivity before attempting reconnection</li>
+<li>Delegates to <code>Connect()</code> method for actual connection logic</li>
+<li>Equivalent to calling <code>Connect()</code> when disconnected</li>
+<li>Used for recovering from connection loss</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlight"><code class="language-cpp">if (!mqtt.IsConnected()) {
+    mqtt.Reconnect();
+}</code></pre>
+<h3 id="void-publishconst-char-topic-const-string-payload"><code>void Publish(const char* topic, const String&amp; payload)</code></h3>
+<p>Publishes a message to the specified MQTT topic.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>topic</code>: MQTT topic string (null-terminated)</li>
+<li><code>payload</code>: Message content to publish as Arduino String</li>
+</ul>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Checks connection status before attempting to publish</li>
+<li>Converts String payload to C-string for PubSubClient</li>
+<li>Captures and logs publish success/failure status</li>
+<li>Returns silently if not connected (logs attempt for debugging)</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlight"><code class="language-cpp">// Simple message publishing
+mqtt.Publish("sensors/temperature", "25.6");
+mqtt.Publish("device/status", "online");
+
+// Publishing sensor data
+String sensorData = "{\"temperature\":25.6,\"humidity\":60.2}";
+mqtt.Publish("sensors/data", sensorData);</code></pre>
+<p><strong>Common Topics:</strong></p>
+<ul>
+<li><code>sensors/temperature</code> - Temperature readings</li>
+<li><code>sensors/humidity</code> - Humidity readings</li>
+<li><code>device/status</code> - Device status updates</li>
+<li><code>commands/response</code> - Command responses</li>
+<li><code>telemetry/data</code> - General telemetry data</li>
+</ul>
+<h3 id="bool-isconnected"><code>bool IsConnected()</code></h3>
+<p>Returns the current MQTT connection status.</p>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><code>true</code> if connected to MQTT broker</li>
+<li><code>false</code> if disconnected or connection lost</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlight"><code class="language-cpp">if (mqtt.IsConnected()) {
+    mqtt.Publish("sensors/data", data);
+} else {
+    mqtt.Reconnect();
+}</code></pre>
+<h3 id="void-loop"><code>void Loop()</code></h3>
+<p>Processes incoming MQTT messages and maintains connection keep-alive.</p>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Calls underlying PubSubClient loop() method</li>
+<li>Processes incoming MQTT messages (subscriptions)</li>
+<li>Maintains MQTT keep-alive mechanism</li>
+<li><strong>Must be called regularly</strong> for proper MQTT operation</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlight"><code class="language-cpp">void loop() {
+    mqtt.Loop();  // Call regularly in main loop
+
+    // Other application code
+    delay(100);
+}</code></pre>
+<p><strong>Critical Requirement:</strong> This method must be called frequently (at least every few seconds) to:</p>
+<ul>
+<li>Process incoming messages</li>
+<li>Send keep-alive packets</li>
+<li>Detect connection failures</li>
+<li>Handle message acknowledgments</li>
+</ul>
+<h2 id="connection-states-and-error-handling">Connection States and Error Handling</h2>
+<h3 id="mqtt-connection-states">MQTT Connection States</h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Description</th>
+<th>IsConnected()</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connected</td>
+<td>Successfully connected to broker</td>
+<td><code>true</code></td>
+<td>Normal operation</td>
+</tr>
+<tr>
+<td>Disconnected</td>
+<td>Not connected to broker</td>
+<td><code>false</code></td>
+<td>Call Connect()</td>
+</tr>
+<tr>
+<td>Connection Failed</td>
+<td>Authentication or network error</td>
+<td><code>false</code></td>
+<td>Check credentials/network</td>
+</tr>
+<tr>
+<td>Connection Lost</td>
+<td>Previously connected but lost</td>
+<td><code>false</code></td>
+<td>Call Reconnect()</td>
+</tr>
+</tbody>
+</table>
+<h2 id="debug-information">Debug Information</h2>
+<h3 id="connection-debug-output">Connection Debug Output</h3>
+<pre class="highlight"><code>Connecting MQTT server: 192.168.1.100 on port: 1883
+Attempting MQTT connection...
+MQTT connected!
+
+Published to topic: sensors/temperature
+Failed to publish to topic: sensors/humidity
+
+MQTT disconnected</code></pre></div>
+
+
+
+
+  </div>
+				</div>
+			</main>
+		</div>
+	</article>
+</div>
+
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+      </main>
+      
+        
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+     
+	
+      <script src="../../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+     
+
+  </body>
+</html>

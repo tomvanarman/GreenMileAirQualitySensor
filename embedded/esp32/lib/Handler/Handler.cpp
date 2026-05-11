@@ -43,13 +43,30 @@ void Handler::rgbTask(void *pvParameters) {
   if (rgb) {
     rgb->startInitialization();
   }
-  vTaskDelete(nullptr); // Task beendet sich selbst
+  vTaskDelete(nullptr); 
 }
 
 
 void Handler::errorEncounteredRGB(RGBLight &rgb, SetupError error) {
   disableRGB(rgb);
   rgb.errorEncountered(error);
+}
+
+void Handler::errorTask(void *pvParameters) {
+  ErrorTaskParams* params = static_cast<ErrorTaskParams*>(pvParameters);
+  if (params && params->rgb) {
+    params->rgb->errorEncountered(params->error);
+  }
+  delete params;
+  vTaskDelete(nullptr); 
+}
+
+void Handler::startErrorTask(RGBLight &rgb, SetupError error) {
+  if (errorTaskHandle == nullptr) {
+    ErrorTaskParams* params = new ErrorTaskParams{&rgb, error};
+    xTaskCreate(errorTask, "ErrorTask", 2048, params, 1, &errorTaskHandle);
+    DEBUG_INFO("Error display task started");
+  }
 }
 
 void Handler::setupCredentialManager(CredentialManager &credential_manager,
@@ -61,12 +78,13 @@ void Handler::setupCredentialManager(CredentialManager &credential_manager,
         "Invalid or missing credentials, starting AP for configuration...");
     server.StartAP();
 
-      disableRGB(rgb);
-      errorEncounteredRGB(rgb, SetupError::INVALID_CREDENTIALS);
+    disableRGB(rgb);
+    startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
     while (true) {
       server.HandleRequests();
-      wait(10);
+      delay(50);
+      yield();
     }
   }
   disableRGB(rgb);
@@ -79,11 +97,12 @@ void Handler::setupWifi(WiFiManager &network, NetworkServer &server,RGBLight &rg
     DEBUG_WARN("Wrong credentials, starting AP for configuration...");
     server.StartAP();
     disableRGB(rgb);
-    errorEncounteredRGB(rgb, SetupError::INVALID_CREDENTIALS);
+    startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
     while (true) {
       server.HandleRequests();
-      wait(10);
+      delay(50);
+      yield();
     }
   }
   disableRGB(rgb);
