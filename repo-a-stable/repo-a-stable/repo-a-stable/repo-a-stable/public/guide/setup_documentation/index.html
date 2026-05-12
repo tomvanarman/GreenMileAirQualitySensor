@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../../design/GreenMileBracket/">
+        <link rel="prev" href="../rgb_indicator_guide/">
       
       
         <link rel="next" href="../../hardware/0_index/">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Guide - Smart Cities Group Project</title>
+        <title>Setup: Air Pollution Sensor Box - Smart Cities Group Project</title>
       
     
     
@@ -82,6 +82,7 @@
 			<label class="md-header__button md-icon" for="__drawer"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg> </label>
 
 			<ul class="mdocotion-breadcrumbs">
+				<li><a href="../rgb_indicator_guide/">Guide</a><span class="breadcrumbs-seperator"></span></li>
 			</ul>
 		</div>
 
@@ -352,6 +353,40 @@
     
   
   
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../rgb_indicator_guide/">Guide</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../rgb_indicator_guide/">Guide</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -360,11 +395,18 @@
         
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Guide
+        Setup: Air Pollution Sensor Box
       </a>
       
         
       
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
     
@@ -1074,56 +1116,61 @@
 <h2 id="step-by-step-instructions">Step-by-Step Instructions</h2>
 <ol>
 <li>
-<p><strong>Start the program:</strong></p>
+<p><strong>Upload and start the firmware</strong></p>
 <ul>
-<li>Upload and start the program on the microcontroller.</li>
+<li>Upload the code to the microcontroller.</li>
+<li>Start the device.</li>
 </ul>
 </li>
 <li>
-<p><strong>Sensor box blinks purple:</strong></p>
+<p><strong>Wait for the status LED</strong></p>
 <ul>
-<li>After a few seconds, the sensor box should start blinking purple.</li>
+<li>After a few seconds, the RGB LED should start blinking purple.</li>
 </ul>
 </li>
 <li>
-<p><strong>Connect to Wi-Fi:</strong></p>
+<p><strong>Connect to the config Wi-Fi network</strong></p>
 <ul>
-<li>Connect your computer or smartphone to the following Wi-Fi network:</li>
-<li><strong>Name:</strong> <code>ESP_Config</code></li>
+<li>Connect your laptop or phone to the created wifi network of the microcontroller:</li>
+<li><strong>SSID:</strong> <code>ESP_Config</code></li>
 <li><strong>Password:</strong> <code>test1234</code></li>
 </ul>
 </li>
 <li>
-<p><strong>Open the configuration page:</strong></p>
+<p><strong>Open the configuration page</strong></p>
 <ul>
-<li>Open a web browser and enter <a href="http://192.168.4.1/">192.168.4.1</a> in the address bar.</li>
+<li>Open your browser and go to <a href="http://192.168.4.1/">http://192.168.4.1</a>.</li>
 </ul>
 </li>
 <li>
-<p><strong>Create an account:</strong></p>
+<p><strong>Create a Green Mile account (if needed)</strong></p>
 <ul>
-<li>Create an <a href="https://github.com/tomvanarman/GreenMileAirQualitySensor/blob/main/docs/web/frontend.md">account</a> if you do not already have one.</li>
+<li>If you do not already have an account, create one on the server.</li>
 </ul>
-</li>
-</ol>
-<p><strong>Server credentials:</strong>
-  - <strong>IPV4:</strong> 46.62.232.90
-  - <strong>IPV6:</strong> 2a01:4f9:c013:29cb::/64
-  - <strong>User:</strong> root
-  - <strong>Password:</strong> green-mile</p>
-<ol>
-<li>
-<p><strong>Register your device:</strong></p>
-<ul>
-<li>Go to <a href="https://greenmile.tapp.city/devices">https://greenmile.tapp.city/devices</a>.</li>
-<li>Register a new device and save the <strong>Device ID</strong> and <strong>Device Key (Secret Key)</strong>.</li>
-<li>:warning: <strong>Important:</strong> The Device Key is only visible once!</li>
-</ul>
+<p><strong>Create a user via SSH:</strong>
+- Connect to the server:
+    - <code>ssh user@IPv4</code>
+- Enter the server password.
+- Go to the project directory:
+    - <code>cd cmb</code>
+- Run the user creation script:
+    - <code>bash scripts/create_user.sh "username" "password"</code>
+- Replace <code>"username"</code> and <code>"password"</code> with your own username and password.</p>
 </li>
 <li>
-<p><strong>Enter Wi-Fi and device data:</strong></p>
+<p><strong>Register your device</strong></p>
 <ul>
-<li>On the configuration page, enter the following information:</li>
+<li>Open <a href="https://greenmile.tapp.city/devices">https://greenmile.tapp.city/devices</a>.</li>
+<li>Register a new device.</li>
+<li>Choose the device name with the <strong>name convention from the guide below</strong> this step is neccesary please do.</li>
+<li>Save the generated <strong>Device ID</strong> and <strong>Device Key (Secret Key)</strong>.</li>
+<li>:warning: <strong>Important:</strong> the Device Key is shown only once. Store it in a safe place.</li>
+</ul>
+</li>
+<li>
+<p><strong>Enter Wi-Fi and device credentials</strong></p>
+<ul>
+<li>On the configuration page, enter:</li>
 <li>SSID (your Wi-Fi name)</li>
 <li>Password (your Wi-Fi password)</li>
 <li>Device ID</li>
@@ -1132,21 +1179,45 @@
 <p><img alt="Login Credentials Page" src="../../assets/LoginCredentialsPage.png"></p>
 </li>
 <li>
-<p><strong>Connect the sensor box:</strong></p>
+<p><strong>Save and connect</strong></p>
 <ul>
-<li>Click "Save &amp; Connect". The sensor box should now connect.</li>
-<li>If it continues blinking, please try again.</li>
+<li>Click <strong>Save &amp; Connect</strong>.</li>
+<li>The sensor box should connect to your network.</li>
+<li>If the box keeps blinking, verify the credentials and try again.</li>
 </ul>
 </li>
 <li>
-<p><strong>Check your data:</strong></p>
+<p><strong>Verify incoming data</strong></p>
 <ul>
-<li>Visit <a href="https://grafana.greenmile.tapp.city/">grafana</a> or <a href="https://greenmile.tapp.city/devices">cmb</a> to view your sensor data.</li>
-<li>Make sure the sensors are correctly connected to the prototype, otherwise the should be blinking blue.</li>
+<li>Open <a href="https://grafana.greenmile.tapp.city/">Grafana</a> or
+  <a href="https://greenmile.tapp.city/devices">Device Portal</a>.</li>
+<li>Sign in with the username and password created earlier.</li>
+<li>Confirm sensor data is visible.</li>
 </ul>
 </li>
 </ol>
-<hr></div>
+<h2 id="device-name-convention">Device Name Convention</h2>
+<p>Use this naming convention when registering a new device.</p>
+<p>Format: TYPE-NNN-OWNER</p>
+<ul>
+<li><strong>TYPE</strong>: WIFI or SIM (always uppercase)</li>
+<li><strong>NNN</strong>: three-digit sequence number for the box (001, 002, ...)</li>
+<li><strong>OWNER</strong>: short identifier of the person or team who added the box (optional, but recommended)</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li>WIFI-001-Devgreenmile - first box using Wi-Fi, created by Devgreenmile</li>
+<li>SIM-042-Jan - box number 042 using a SIM connection, added by Jan</li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Use - as the separator.</li>
+<li>1 name per device.</li>
+<li>Maximum length: 32 characters.</li>
+<li>TYPE must be uppercase: WIFI` or SIM.</li>
+<li>The sequence number must always have three digits.</li>
+<li>Check existing sensor boxes in the dashboard before choosing a new number.</li>
+</ul></div>
 
 
 

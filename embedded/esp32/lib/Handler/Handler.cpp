@@ -83,7 +83,7 @@ void Handler::setupCredentialManager(CredentialManager &credential_manager,
 
     while (true) {
       server.HandleRequests();
-      delay(50);
+      wait(50);
       yield();
     }
   }
@@ -101,7 +101,7 @@ void Handler::setupWifi(WiFiManager &network, NetworkServer &server,RGBLight &rg
 
     while (true) {
       server.HandleRequests();
-      delay(50);
+      wait(50);
       yield();
     }
   }
