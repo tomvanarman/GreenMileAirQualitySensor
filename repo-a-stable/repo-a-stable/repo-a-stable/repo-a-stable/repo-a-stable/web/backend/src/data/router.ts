@@ -8,6 +8,8 @@ import BatteryModel from './battery';
 import { verifyDeviceHmac } from '../crypto';
 import { IS_PRODUCTION } from '../env';
 
+import { client } from '../main';
+
 export const dataRouter = express.Router();
 
 /**
@@ -87,7 +89,33 @@ dataRouter.post('/battery', async (req, res) => {
     }
 });
 
-// dataRouter.post('/quality', (req, res) => {
-//     QualityModel.insert(req.body);
-//     res.status(204).end();
-// });
+client.on('message', async (topic, message) => {
+    console.log(`Received MQTT message on topic ${topic}`);
+    if (topic.endsWith('sps30/data')){
+        try {
+            const payload = JSON.parse(message.toString());
+            await Promise.all([SPS30Model.insert(payload), QualityModel.calculateFromSPS30(payload)]);
+            if (IS_PRODUCTION) console.log('Processed MQTT SPS30 data successfully');
+        } catch (error) {
+            console.log('Error processing MQTT SPS30 data:', error);
+        }
+    }
+    else if (topic.endsWith('sht41/data')){
+        try {
+            const payload = JSON.parse(message.toString());
+            await SHT41Model.insert(payload);
+            if (IS_PRODUCTION) console.log('Processed MQTT SHT41 data successfully');
+        } catch (error) {
+            console.log('Error processing MQTT SHT41 data:', error);
+        }
+    }
+    else if (topic.endsWith('battery/data')){
+        try {
+            const payload = JSON.parse(message.toString());
+            await BatteryModel.insert(payload);
+            if (IS_PRODUCTION) console.log('Processed MQTT Battery data successfully');
+        } catch (error) {
+            console.log('Error processing MQTT Battery data:', error);
+        }
+    }
+});
