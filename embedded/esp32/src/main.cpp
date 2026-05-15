@@ -115,7 +115,7 @@ void setup() {
   DEBUG_SECTION("Setup");
 
   handler.setupRGB(rgbLight);
-  handler.rgbInitialization(rgbLight);
+  //handler.rgbInitialization(rgbLight);
 
   handler.setupCredentialManager(credential_manager, server, rgbLight);
   
@@ -182,7 +182,7 @@ void setup() {
 }
 
 void loop() {
-  handler.disableRGB(rgbLight);
+  // handler.disableRGB(rgbLight);
   DEBUG_BLOCK("Loop start");
 
   bool spsSent = HandleSPS30Logic();

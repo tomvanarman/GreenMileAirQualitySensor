@@ -19,13 +19,22 @@ class Handler {
 private:
   DeepSleepManager deepSleepManager;
   TaskHandle_t rgbTaskHandle = nullptr;
+  TaskHandle_t errorTaskHandle = nullptr;
   static void rgbTask(void *pvParameters);
+  static void errorTask(void *pvParameters);
+  
+  // Struct to pass RGB and error to error task
+  struct ErrorTaskParams {
+    RGBLight* rgb;
+    SetupError error;
+  };
 
 public:
   void setupRGB(RGBLight &rgb);
   void rgbInitialization(RGBLight &rgb);
   void disableRGB(RGBLight &rgb);
   void errorEncounteredRGB(RGBLight &rgb, SetupError error);
+  void startErrorTask(RGBLight &rgb, SetupError error);
   void setupSPS30(SPS30 &sps30, TwoWire &wire, RGBLight &rgb);
   void setupSHT41(SHT41Sensor &sht41, TwoWire &wire, RGBLight &rgb);
   void setupWifi(WiFiManager &network, NetworkServer &server, RGBLight &rgb);
