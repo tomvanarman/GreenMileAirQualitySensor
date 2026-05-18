@@ -4,6 +4,9 @@
 #include <Wire.h>
 
 #include <algorithm>
+#include <cstdint>
+#include <cstdio>
+#include <ctime>
 #include <deque>
 
 // Custom structured debug logging
@@ -16,9 +19,9 @@
 #include "HelpMethod.h"
 
 // Sensor Libraries
+#include "RGBLight.h"
 #include "SHT41Sensor.h"
 #include "SPS30.h"
-#include "RGBLight.h"
 
 // Actuator Libraries
 #include "LEDStrip.h"
@@ -44,23 +47,25 @@ const char *SPS30path = "/api/data/sps30";
 const char *SHT41path = "/api/data/sht41";
 const char *BatteryPath = "/api/data/battery";
 
-// Server config for MQTT 
-const char* MQTT_URI = "mqtt://greenmile.tapp.city";
+// Server config for MQTT
+const char *MQTT_URI = "mqtt://greenmile.tapp.city";
 const char *MQTT_HOST = "greenmile.tapp.city";
-uint32_t MQTT_PORT    = 1883;
+uint32_t MQTT_PORT = 1883;
 
-//const char* MQTT_TOPIC    = "climate-box/#"; //doesnt need to listen to topics, only publish
+// const char* MQTT_TOPIC    = "climate-box/#"; //doesnt need to listen to
+// topics, only publish
 char MQTT_PUBLISH_TOPIC_SPS30[64];
 char MQTT_PUBLISH_TOPIC_SHT41[64];
 char MQTT_PUBLISH_TOPIC_BATTERY[64];
 
 // Timing constants
-constexpr unsigned long kReconnectInterval = 6000;
-constexpr unsigned long kDataTransmissionInterval = 10000;
-constexpr unsigned long kDataMeasurementInterval = 2000;
+constexpr uint32_t kReconnectInterval = 6000;
+constexpr uint32_t kDataTransmissionInterval = 10000;
+constexpr uint32_t kDataMeasurementInterval = 2000;
 
 // Global objects
-SIM7080 sim7080("iot.1nce.net", MQTT_HOST, MQTT_PORT); // APN for 1NCE IoT SIM cards
+SIM7080 sim7080("iot.1nce.net", MQTT_HOST,
+                MQTT_PORT);  // APN for 1NCE IoT SIM cards
 
 CredentialManager credential_manager;
 NetworkServer server(credential_manager);
@@ -75,25 +80,25 @@ SHT41Sensor sht41;
 Handler handler;
 
 LEDStrip strip;
-SegmentDisplay segmentDisplay(11, 12, 10); // Data, CLK, CS pins
-RGBLight rgbLight(14, 13, 12); 
+SegmentDisplay segmentDisplay(11, 12, 10);  // Data, CLK, CS pins
+RGBLight rgbLight(14, 13, 12);
 
 // For debugging purposes
 float maxPM = 25.0f;
 GradientStop stops[] = {
-    {0.0f / maxPM, 0, 255, 0},    // green
-    {5.0f / maxPM, 255, 255, 0},  // yellow
-    {10.0f / maxPM, 255, 165, 0}, // orange
-    {15.0f / maxPM, 255, 0, 0},   // red
-    {25.0f / maxPM, 128, 0, 0},   // maroon
+    {0.0f / maxPM, 0, 255, 0},     // green
+    {5.0f / maxPM, 255, 255, 0},   // yellow
+    {10.0f / maxPM, 255, 165, 0},  // orange
+    {15.0f / maxPM, 255, 0, 0},    // red
+    {25.0f / maxPM, 128, 0, 0},    // maroon
 };
 
 ColorMap colorMap(maxPM, stops);
 
 // NTP server configuration
-const char *ntpServer1 = "149.143.87.22"; // pool.ntp.org
-const char *ntpServer2 = "82.65.248.56";  // europe.pool.ntp.org
-const long gmtOffset_sec = 3600;          // GMT+1
+const char *ntpServer1 = "149.143.87.22";  // pool.ntp.org
+const char *ntpServer2 = "82.65.248.56";   // europe.pool.ntp.org
+const int32_t gmtOffset_sec = 3600;        // GMT+1
 const int daylightOffset_sec = 0;
 
 // Function declarations
@@ -104,30 +109,31 @@ bool sendPayload(const char *path, const String &payload);
 void initializeTime();
 uint64_t getCurrentTimestampMs();
 int determineBatteryLevel();
-static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data);
+static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
+                               int32_t event_id, void *event_data);
 
 void setup() {
   Serial.begin(115200);
   DEBUG_BLOCK("Starting GreenMile Air Quality Sensor");
 
-  wait(5000); // Give some time to open the serial monitor after reset
+  wait(5000);  // Give some time to open the serial monitor after reset
 
   DEBUG_SECTION("Setup");
 
-  //handler.setupRGB(rgbLight);
-  //handler.rgbInitialization(rgbLight);
+  handler.setupRGB(rgbLight);
+  handler.rgbInitialization(rgbLight);
 
   handler.setupCredentialManager(credential_manager, server, rgbLight);
-  
-  snprintf(MQTT_PUBLISH_TOPIC_SPS30, sizeof(MQTT_PUBLISH_TOPIC_SPS30), 
-  "greenmile/%s/sps30/data", credential_manager.GetDeviceID().c_str());
 
-  snprintf(MQTT_PUBLISH_TOPIC_SHT41, sizeof(MQTT_PUBLISH_TOPIC_SHT41), 
-  "greenmile/%s/sht41/data", credential_manager.GetDeviceID().c_str());
+  snprintf(MQTT_PUBLISH_TOPIC_SPS30, sizeof(MQTT_PUBLISH_TOPIC_SPS30),
+           "greenmile/%s/sps30/data", credential_manager.GetDeviceID().c_str());
 
-  snprintf(MQTT_PUBLISH_TOPIC_BATTERY, sizeof(MQTT_PUBLISH_TOPIC_BATTERY), 
-  "greenmile/%s/battery/data", credential_manager.GetDeviceID().c_str());
+  snprintf(MQTT_PUBLISH_TOPIC_SHT41, sizeof(MQTT_PUBLISH_TOPIC_SHT41),
+           "greenmile/%s/sht41/data", credential_manager.GetDeviceID().c_str());
 
+  snprintf(MQTT_PUBLISH_TOPIC_BATTERY, sizeof(MQTT_PUBLISH_TOPIC_BATTERY),
+           "greenmile/%s/battery/data",
+           credential_manager.GetDeviceID().c_str());
 
   if (useSIM) {
     // ============================================================================
@@ -135,7 +141,6 @@ void setup() {
     // ============================================================================
     handler.setupSim7080(sim7080, rgbLight);
   } else {
-    
     //============================================================================
     // Setup WiFi
     //============================================================================
@@ -145,51 +150,63 @@ void setup() {
     initializeTime();
   }
 
-  //setup MQTT client
+  // setup MQTT client
   esp_mqtt_client_config_t mqtt_cfg = {};
-  
+
   mqtt_cfg.host = MQTT_HOST;
   mqtt_cfg.uri = MQTT_URI;
   mqtt_cfg.port = MQTT_PORT;
 
   client = esp_mqtt_client_init(&mqtt_cfg);
-  esp_mqtt_client_register_event(client, MQTT_EVENT_CONNECTED,    mqtt_event_handler, NULL);
-  esp_mqtt_client_register_event(client, MQTT_EVENT_DATA,         mqtt_event_handler, NULL);
-  esp_mqtt_client_register_event(client, MQTT_EVENT_DISCONNECTED, mqtt_event_handler, NULL);
+  esp_mqtt_client_register_event(client, MQTT_EVENT_CONNECTED,
+                                 mqtt_event_handler, NULL);
+  esp_mqtt_client_register_event(client, MQTT_EVENT_DATA, mqtt_event_handler,
+                                 NULL);
+  esp_mqtt_client_register_event(client, MQTT_EVENT_DISCONNECTED,
+                                 mqtt_event_handler, NULL);
   esp_mqtt_client_start(client);
 
   // Initialize I2C communication
-  WireSensors.begin(8, 9);      // SDA, SCL
-  WireSensors.setClock(100000); // lock to 100 kHz for both SPS30 and SHT41
-  WireSensors.setTimeOut(100);  // a bit more headroom for long reads
+  WireSensors.begin(8, 9);       // SDA, SCL
+  WireSensors.setClock(100000);  // lock to 100 kHz for both SPS30 and SHT41
+  WireSensors.setTimeOut(100);   // a bit more headroom for long reads
 
   //============================================================================
   // Setup SPS30
   //============================================================================
-  handler.setupSPS30(sps30, WireSensors, rgbLight);
+  bool setupSPS30 = handler.setupSPS30(sps30, WireSensors, rgbLight);
 
   //============================================================================
   // Setup SHT41
   //============================================================================
-  handler.setupSHT41(sht41, WireSensors, rgbLight);
+  bool setupSHT41 = handler.setupSHT41(sht41, WireSensors, rgbLight);
   // Initialize LUT for color mapping
   colorMap.InitLUT();
+
+  while (!setupSHT41 || !setupSPS30) {
+    DEBUG_BLOCK("Setup failed, retrying...");
+    wait(3000);
+    if (!setupSPS30)
+      setupSPS30 = handler.setupSPS30(sps30, WireSensors, rgbLight);
+    if (!setupSHT41)
+      setupSHT41 = handler.setupSHT41(sht41, WireSensors, rgbLight);
+  }
 
   // Initialize segment display
   // int batteryLevel = determineBatteryLevel();
   // segmentDisplay.setBattery(batteryLevel);
-  // wait(3000);
+  wait(3000);
 }
 
 void loop() {
-  // handler.disableRGB(rgbLight);
+  handler.disableRGB(rgbLight);
   DEBUG_BLOCK("Loop start");
 
-  bool spsSent = HandleSPS30Logic();
+  // bool spsSent = HandleSPS30Logic();
   bool shtSent = HandleSHT41Logic();
   // bool batterySent = HandleBatteryLogic();
 
-  if (spsSent && shtSent) {
+  if (/* spsSent  && */ shtSent) {
     DEBUG_OK("All data sent successfully, entering deep sleep");
     wait(500);
     handler.enterDeepSleep(strip, segmentDisplay, useSIM);
@@ -199,12 +216,11 @@ void loop() {
 }
 
 bool HandleSPS30Logic() {
-  unsigned long now = millis();
+  uint32_t now = millis();
   bool can_measure = now - sps30.last_measurement >= kDataMeasurementInterval;
   bool can_update = now - sps30.last_update >= kDataTransmissionInterval;
 
-  if (!can_measure)
-    return false;
+  if (!can_measure) return false;
 
   SPS30_measurement spsData = sps30.readData();
 
@@ -218,8 +234,7 @@ bool HandleSPS30Logic() {
     return false;
   }
 
-  if (strip.isLoading())
-    strip.stopLoading();
+  if (strip.isLoading()) strip.stopLoading();
 
   sps30.last_measurement = now;
 
@@ -227,8 +242,7 @@ bool HandleSPS30Logic() {
   Color c = colorMap.DataToColor(spsData.mc_2p0);
   strip.toColor(CRGB(c.r, c.g, c.b), 50);
 
-  if (!can_update)
-    return false;
+  if (!can_update) return false;
 
   sps30.last_update = now;
 
@@ -288,12 +302,11 @@ bool HandleSPS30Logic() {
 
 // Read out the SHT41 sensor
 bool HandleSHT41Logic() {
-  unsigned long now = millis();
+  uint32_t now = millis();
   bool can_measure = now - sht41.last_measurement >= kDataMeasurementInterval;
   bool can_update = now - sht41.last_update >= kDataTransmissionInterval;
 
-  if (!can_measure)
-    return false;
+  if (!can_measure) return false;
 
   SHT41Data shtData = sht41.readData(10);
 
@@ -308,8 +321,7 @@ bool HandleSHT41Logic() {
 
   sht41.last_measurement = now;
 
-  if (!can_update)
-    return false;
+  if (!can_update) return false;
 
   sht41.last_update = now;
 
@@ -353,21 +365,19 @@ bool HandleSHT41Logic() {
 
 // Read out the battery
 bool HandleBatteryLogic() {
-  unsigned long now = millis();
+  uint32_t now = millis();
   bool can_measure =
       now - sim7080.last_battery_measurement >= kDataMeasurementInterval;
   bool can_update =
       now - sim7080.last_battery_update >= kDataTransmissionInterval;
 
-  if (!can_measure)
-    return false;
+  if (!can_measure) return false;
 
   int batteryLevel = determineBatteryLevel();
 
   sim7080.last_battery_measurement = now;
 
-  if (!can_update)
-    return false;
+  if (!can_update) return false;
 
   sim7080.last_battery_update = now;
 
@@ -408,8 +418,8 @@ bool HandleBatteryLogic() {
 }
 
 bool sendPayload(const char *path, const String &payload) {
-  //there is no need for signing when using MQTT
-  //When wanting more security we need TLS with client certificates
+  // there is no need for signing when using MQTT
+  // When wanting more security we need TLS with client certificates
 
   // auto [signatureOk, signature] = httpManager.signBody(
   //     payload.c_str(), credential_manager.GetDeviceKey().c_str());
@@ -420,7 +430,7 @@ bool sendPayload(const char *path, const String &payload) {
   // }
 
   if (useSIM) {
-    // TODO add signature logic to SIM7080 if needed
+    // TODO(marni): Add signature logic to SIM7080 if needed.
 
     if (!sim7080.ensureConnected()) {
       DEBUG_WARN("Failed to connect to network");
@@ -430,18 +440,21 @@ bool sendPayload(const char *path, const String &payload) {
     }
 
     // if (sim7080.httpPost(credential_manager.GetDeviceID().c_str(),
-    //                      signature.c_str(), host, path, url, payload.c_str())) {
+    //                      signature.c_str(), host, path, url,
+    //                      payload.c_str())) {
     //   return true;
     // }
 
-    sim7080.mqttPublish(credential_manager.GetDeviceID().c_str(), MQTT_PUBLISH_TOPIC_SPS30, payload.c_str());
+    sim7080.mqttPublish(credential_manager.GetDeviceID().c_str(),
+                        MQTT_PUBLISH_TOPIC_SPS30, payload.c_str());
   } else {
     // if (httpManager.post(String(credential_manager.GetDeviceID()),
     //                      signature.c_str(), String(url), String(path),
     //                      payload)) {
     //   return true;
     // }
-    if(esp_mqtt_client_publish(client, MQTT_PUBLISH_TOPIC_SPS30, payload.c_str(), 0, 1, 0) > 0) {
+    if (esp_mqtt_client_publish(client, MQTT_PUBLISH_TOPIC_SPS30,
+                                payload.c_str(), 0, 1, 0) > 0) {
       return true;
     }
   }
@@ -459,7 +472,9 @@ void initializeTime() {
     wait(2000);
   }
   DEBUG_OK("Time synchronized");
-  DEBUG_KV("Current time", String(asctime(&timeinfo)));
+  char current_time[26];
+  asctime_r(&timeinfo, current_time);
+  DEBUG_KV("Current time", String(current_time));
 }
 
 uint64_t getCurrentTimestampMs() {
@@ -496,11 +511,12 @@ int determineBatteryLevel() {
 
 // ─── MQTT event handler ───────────────────────
 
-static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
-  esp_mqtt_event_handle_t event = (esp_mqtt_event_handle_t) event_data;
+static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
+                               int32_t event_id, void *event_data) {
+  esp_mqtt_event_handle_t event =
+      static_cast<esp_mqtt_event_handle_t>(event_data);
 
-  switch ((esp_mqtt_event_id_t)event_id) {
-
+  switch (static_cast<esp_mqtt_event_id_t>(event_id)) {
     case MQTT_EVENT_CONNECTED:
       DEBUG_INFO("MQTT connected successfully");
       // esp_mqtt_client_subscribe(client, MQTT_TOPIC, 0);
@@ -509,11 +525,11 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     case MQTT_EVENT_DATA: {
       String topic;
       for (int i = 0; i < event->topic_len; i++)
-        topic += (char)event->topic[i];
+        topic += static_cast<char>(event->topic[i]);
 
       String msg;
       for (int i = 0; i < event->data_len; i++)
-        msg += (char)event->data[i];
+        msg += static_cast<char>(event->data[i]);
 
       DEBUG_INFO("📩 Topic: " + topic);
       DEBUG_INFO("📩 Msg:   " + msg);

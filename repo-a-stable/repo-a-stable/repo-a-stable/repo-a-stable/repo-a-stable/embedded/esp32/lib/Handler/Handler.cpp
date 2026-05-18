@@ -8,13 +8,13 @@ void Handler::setupSim7080(SIM7080 &sim7080, RGBLight &rgb) {
 
   if (!sim7080.ensureConnected()) {
     DEBUG_WARN("Failed to connect to network");
-    disableRGB(rgb);
+    //disableRGB(rgb);
     errorEncounteredRGB(rgb, SetupError::WIFI_INIT_FAILED);
 
     while (1)
       sim7080.ensureConnected();
   }
-  disableRGB(rgb);
+  //disableRGB(rgb);
 }
 
 void Handler::setupRGB(RGBLight &rgb) {
@@ -48,7 +48,7 @@ void Handler::rgbTask(void *pvParameters) {
 
 
 void Handler::errorEncounteredRGB(RGBLight &rgb, SetupError error) {
-  disableRGB(rgb);
+  //disableRGB(rgb);
   rgb.errorEncountered(error);
 }
 
@@ -78,7 +78,7 @@ void Handler::setupCredentialManager(CredentialManager &credential_manager,
         "Invalid or missing credentials, starting AP for configuration...");
     server.StartAP();
 
-    disableRGB(rgb);
+    //disableRGB(rgb);
     startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
     while (true) {
@@ -87,7 +87,7 @@ void Handler::setupCredentialManager(CredentialManager &credential_manager,
       yield();
     }
   }
-  disableRGB(rgb);
+  //disableRGB(rgb);
 }
 
 void Handler::setupWifi(WiFiManager &network, NetworkServer &server,RGBLight &rgb) {
@@ -96,7 +96,7 @@ void Handler::setupWifi(WiFiManager &network, NetworkServer &server,RGBLight &rg
   if (!network.isConnected()) {
     DEBUG_WARN("Wrong credentials, starting AP for configuration...");
     server.StartAP();
-    disableRGB(rgb);
+    //disableRGB(rgb);
     startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
     while (true) {
@@ -105,7 +105,7 @@ void Handler::setupWifi(WiFiManager &network, NetworkServer &server,RGBLight &rg
       yield();
     }
   }
-  disableRGB(rgb);
+  //disableRGB(rgb);
 }
 
 void Handler::setupSPS30(SPS30 &sps30, TwoWire &wire, RGBLight &rgb) {
@@ -117,7 +117,7 @@ void Handler::setupSPS30(SPS30 &sps30, TwoWire &wire, RGBLight &rgb) {
     while (1)
       wait(10);
   }
-  disableRGB(rgb);
+  //disableRGB(rgb);
 }
 
 void Handler::setupSHT41(SHT41Sensor &sht41, TwoWire &wire, RGBLight &rgb) {
@@ -131,7 +131,7 @@ void Handler::setupSHT41(SHT41Sensor &sht41, TwoWire &wire, RGBLight &rgb) {
       wait(10);
   }
 
-  disableRGB(rgb);
+  //disableRGB(rgb);
 }
 
 void Handler::enterDeepSleep(LEDStrip &strip, SegmentDisplay &segmentDisplay,

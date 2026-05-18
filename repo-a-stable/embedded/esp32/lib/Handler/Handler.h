@@ -35,8 +35,8 @@ public:
   void disableRGB(RGBLight &rgb);
   void errorEncounteredRGB(RGBLight &rgb, SetupError error);
   void startErrorTask(RGBLight &rgb, SetupError error);
-  void setupSPS30(SPS30 &sps30, TwoWire &wire, RGBLight &rgb);
-  void setupSHT41(SHT41Sensor &sht41, TwoWire &wire, RGBLight &rgb);
+  bool setupSPS30(SPS30 &sps30, TwoWire &wire, RGBLight &rgb);
+  bool setupSHT41(SHT41Sensor &sht41, TwoWire &wire, RGBLight &rgb);
   void setupWifi(WiFiManager &network, NetworkServer &server, RGBLight &rgb);
   void setupSim7080(SIM7080 &sim7080, RGBLight &rgb);
   void setupCredentialManager(CredentialManager &credential_manager,

@@ -6,6 +6,7 @@ RGBLight::RGBLight(int r, int g, int b) : r(r), g(g), b(b) {}
 
 void RGBLight::setup()
 {
+    DEBUG_INFO("Initializing RGBLight");
     // Configure the RGBLight pins as outputs
     pinMode(r, OUTPUT);
     pinMode(g, OUTPUT);
@@ -21,6 +22,7 @@ void RGBLight::setup()
 
 void RGBLight::setupColorCheck()
 {
+    DEBUG_INFO("Setting up color check");
     digitalWrite(r, HIGH);
     wait(1000);
     digitalWrite(r, LOW);
@@ -35,6 +37,7 @@ void RGBLight::setupColorCheck()
 
 void RGBLight::startInitialization()
 {
+    DEBUG_INFO("Starting RGBLight initialization sequence");
     const int breathSteps = 50;
     const int breathDelay = 20; // ms
     while (1)
@@ -74,12 +77,11 @@ void RGBLight::disable()
     analogWrite(r, LOW);
     analogWrite(g, LOW);
     analogWrite(b, LOW);
-    DEBUG_INFO("RGBLight disabled");
 }
 
 void RGBLight::errorEncountered(SetupError error)
 {
-    // Rote LED blinkt bei Fehler
+    DEBUG_WARN("Error encountered, update RGB: " + ToString(error));
     while (1)
     {
         analogWrite(r, 255);

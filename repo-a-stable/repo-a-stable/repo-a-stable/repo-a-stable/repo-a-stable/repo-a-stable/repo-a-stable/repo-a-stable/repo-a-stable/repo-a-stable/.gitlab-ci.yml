@@ -1,0 +1,63 @@
+image: python:3.9-slim
+
+stages:
+  - deploy
+  - push-to-unstable
+  - push-to-stable
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+pages:
+  stage: deploy
+  tags:
+    - hva
+  before_script:
+    - time apt update
+    - time pip install -r requirements.txt
+    - time cd mdocotion && python setup.py install && cd ..
+  script:
+    - time mkdocs build --site-dir public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# --- DEVELOP -> UNSTABLE ---
+push-to-unstable:
+  stage: push-to-unstable
+  image: alpine
+  tags:
+    - hva
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  script:
+    - apk add --no-cache git rsync
+    - git config --global user.email "ci@gitlab.com"
+    - git config --global user.name "GitLab CI"
+    - git clone --branch unstable https://$GIT_USERNAME:$GIT_PASSWORD@github.com/tomvanarman/GreenMileAirQualitySensor.git repo-a-unstable
+    - rsync -a --exclude=.git . repo-a-unstable/
+    - cd repo-a-unstable
+    - git add .
+    - 'git commit -m "CI: sync from develop to unstable [$CI_COMMIT_SHORT_SHA]" || echo "Nothing to commit"'
+    - git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/tomvanarman/GreenMileAirQualitySensor.git unstable
+
+# --- MAIN -> STABLE ---
+push-to-stable:
+  stage: push-to-stable
+  image: alpine
+  tags:
+    - hva
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - apk add --no-cache git rsync
+    - git config --global user.email "ci@gitlab.com"
+    - git config --global user.name "GitLab CI"
+    - git clone --branch stable https://$GIT_USERNAME:$GIT_PASSWORD@github.com/tomvanarman/GreenMileAirQualitySensor.git repo-a-stable
+    - rsync -a --exclude=.git . repo-a-stable/
+    - cd repo-a-stable
+    - git add .
+    - 'git commit -m "CI: sync from main to stable [$CI_COMMIT_SHORT_SHA]" || echo "Nothing to commit"'
+    - git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/tomvanarman/GreenMileAirQualitySensor.git stable
