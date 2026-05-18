@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../../stakeholder-validation-user-stories/" rel="prev"/>
+<link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAPT09ADg4OACKiYgA////AGtrawDU1NQAlJSUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAVQIiIAAAIgBVAiIgAAAiAFUCEiAAACIAVQIiIAAAcABVAANgAABwAFUAA2AAB3AAYAADYAAHcABgAANgAAdwAGAAA2B3B3AAYAADAHcHcABgAAMAdwd3BmAAAAAHAHAAAAAAAAAAAAAAAAAABAAAAAAAAABEAAAAAAAABEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBAAAAgQAAAIEEAACBDAAAgQwAAIkeAADfHwAA/74AAP/8AAD/+AAA" rel="icon"/>
+<meta content="mkdocs-1.4.3, mkdocs-material-9.1.20" name="generator"/>
+<title>How to scrum - Smart Cities Group Project</title>
+<link href="../../../assets/stylesheets/main.eebd395e.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../../assets/stylesheets/mdocotion.css" rel="stylesheet">
+<script src="../../../assets/javascripts/mdocotion.js"></script>
+</link></head>
+<body dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#scrum-way-of-working">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<div class="header-inner">
+<div class="header-info-bar">
+<label class="md-header__button md-icon" for="__drawer"> <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg> </label>
+<ul class="mdocotion-breadcrumbs">
+<li><a href="../../linting-formatting/">Workflow</a><span class="breadcrumbs-seperator"></span></li>
+</ul>
+</div>
+<ul class="mdocotion-header-nav">
+<li>
+<label class="md-header__button md-icon" for="__search"> <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg> </label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" style="background: #f1f5f9;">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<div class="mdocotion-nav-header">
+<div class="mdocotion-nav-logo">
+<a href="../../..">
+<img alt="logo" src="../../../assets/logo.svg"/>
+</a>
+</div>
+	
+		Smart Cities Group Project
+	
+</div>
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+        The Green Mile
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../architecture/0_index/">Architecture</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../architecture/0_index/">Architecture</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../architecture/database/">
+        Database
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../architecture/docker/">
+        Docker
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../architecture/system-architecture/">
+        System Architecture
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+            
+                Assets
+            
+        </label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../..">Assets</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../assets/TEMPLATES/hardware_components/">
+        TEMPLATES
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../design/0_index/">Design</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../design/0_index/">Design</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../design/GreenMileBracket/">
+        The Bracket
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../guide/rgb_indicator_guide/">Guide</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../guide/rgb_indicator_guide/">Guide</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../guide/setup_documentation/">
+        Setup: Air Pollution Sensor Box
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../hardware/0_index/">Hardware</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../hardware/0_index/">Hardware</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/Fritzingscheme/">
+        Green Mile Project – Hardware Architecture
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/LiFePo4/">
+        LifePo4
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/SHT41/">
+        SHT41
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/SIM7080G/">
+        SIM7080G – Hardware Guide
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/SPS30/">
+        SPS30
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/Wiring-Documentation/">
+        Wiring Documentation
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/embedded-quickstart/">
+        Embedded Hardware – Quickstart
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/embedded-requirements/">
+        Embedded requirements
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/led-strip/">
+        LED Strip
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../hardware/segment-display/">
+        Segment Display
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../product/0_index/">Product</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../product/0_index/">Product</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../product/product-vision/">
+        Product vision
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../security/0_index/">Security</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../security/0_index/">Security</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../security/environment-variables/">
+        Environment Variables
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../server/0_index/">Server</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../server/0_index/">Server</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../server/esp32-portal/">
+        CMB portal
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../server/network-ssl/">
+        Network &amp; SSL
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../server/server-setup/">
+        Server Setup
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../software/0_index/">Software</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../software/0_index/">Software</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/Ite-interface/">
+        LTE chip (SIM7080G)
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/SHT41-doc/">
+        Hardware interfacing | Temperature and humidity sensor (SHT41)
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/SPS30/">
+        SPS30
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/cpp-style-guide/">
+        C++ Style Guide
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/debug-logger/">
+        DEBUG Logger
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/development-setup/">
+        Development Setup
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/json-format/">
+        JSON Format
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/mqtt-client/">
+        MqttClient Class Documentation
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../software/wifi-manager/">
+        WiFi Manager
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tests/battery-test/">
+        Tests
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_12" type="checkbox"/>
+<label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../web/0_index/">Web</a>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_12_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_12">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../../web/0_index/">Web</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../web/api/">
+        API
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../web/frontend/">
+        Frontend
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../web/grafana/">
+        Grafana
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_13" type="checkbox"/>
+<label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../linting-formatting/">Workflow</a>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_13_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_13">
+<span class="md-nav__icon md-icon"></span>
+<a href="../../linting-formatting/">Workflow</a>
+</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../merge-requests/">
+        Merge Requests Workflow
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../stakeholder-validation-user-stories/">
+        Stakeholder Validation with Ruth (Green Mile)
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<a class="md-nav__link md-nav__link--active" href="./">
+        How to scrum
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="mdocotion-content md-content__inner md-typeset">
+<div class="mdocotion-content-scroller">
+<main class="mdocotion-content-view">
+<div class="mdocotion-content-block">
+<div class="mdocotion-content-block-inner">
+<div><h1 id="scrum-way-of-working">Scrum Way of Working</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>This document describes how we apply Scrum within our team. It outlines our way of working, how we structure our backlog, and how we use templates to ensure consistency and clarity.</p>
+<p>Our goal is to maintain a transparent, structured, and efficient workflow that supports collaboration and delivers value incrementally.</p>
+<h1 id="table-of-contents">Table of Contents</h1>
+<ol>
+<li><a href="#1-introduction">Introduction</a> </li>
+<li><a href="#2-way-of-working">Way of Working</a> </li>
+<li><a href="#3-backlog-structure">Backlog Structure</a> </li>
+<li><a href="#4-templates--usage">Templates &amp; Usage</a><br/>
+   4.1 <a href="#41-epic">Epic</a><br/>
+   4.2 <a href="#42-sub-epic">Sub-Epic</a><br/>
+   4.3 <a href="#43-user-story">User Story</a><br/>
+   4.4 <a href="#44-task">Task</a> </li>
+<li><a href="#5-relationship-between-work-items">Relationship Between Work Items</a> </li>
+<li><a href="#6-completion-flow">Completion Flow</a> </li>
+<li><a href="#8-how-to-commit">How to Commit</a> </li>
+<li><a href="#9-how-to-weight-issues">How to Weight Issues</a> </li>
+<li><a href="#10-how-to-create-a-branch">How to Create a Branch</a> </li>
+<li><a href="#11-how-to-create-a-merge-request">How to Create a Merge Request</a> </li>
+<li><a href="#12-summary">Summary</a> </li>
+</ol>
+<h2 id="2-way-of-working">2. Way of Working</h2>
+<p>We follow an iterative Scrum approach, working in sprints to deliver incremental value.</p>
+<h3 id="key-principles">Key Principles</h3>
+<ul>
+<li>Work is organized in a structured backlog</li>
+<li>Each item in the backlog has a clear purpose and level of detail</li>
+<li>Larger work items are broken down into smaller, manageable pieces</li>
+<li>Progress is tracked through clearly defined completion criteria</li>
+</ul>
+<h2 id="3-backlog-structure">3. Backlog Structure</h2>
+<p>We organize our backlog using the following hierarchy:</p>
+<div class="mermaid">flowchart LR
+    A[Epic&lt;br/&gt;High-level goal or feature]
+    B[Sub-Epic&lt;br/&gt;Functional part of an Epic]
+    C[User Story&lt;br/&gt;User need or requirement]
+    D[Task&lt;br/&gt;Concrete implementation work]
+
+    A --&gt; B
+    B --&gt; C
+    C --&gt; D</div>
+<p>Each level represents a different level of abstraction and detail.</p>
+<h2 id="4-templates-usage">4. Templates &amp; Usage</h2>
+<p>To ensure consistency, we use standardized templates for each backlog item type.</p>
+<h3 id="41-epic">4.1 <a href="../../.gitlab/issue_templates/epic.md">Epic</a></h3>
+<p>An <strong>Epic</strong> represents a large body of work that delivers significant value. It typically spans multiple sprints.</p>
+<h4 id="purpose">Purpose</h4>
+<ul>
+<li>Capture high-level goals or features</li>
+<li>Provide strategic direction</li>
+<li>Group related work</li>
+</ul>
+<h4 id="template-structure">Template Structure</h4>
+<ul>
+<li>
+<p><strong>Description</strong><br/>
+  High-level explanation of the goal and scope.</p>
+</li>
+<li>
+<p><strong>Definition of Done</strong></p>
+</li>
+<li>All <strong>Blocked by Sub Epics</strong> are completed and checked  </li>
+<li>All <strong>Blocked by User Stories</strong> are completed and checked  </li>
+</ul>
+<h4 id="how-to-write">How to Write</h4>
+<ul>
+<li>Focus on <em>why</em> the work is needed</li>
+<li>Keep it high-level</li>
+<li>Avoid implementation details</li>
+</ul>
+<h3 id="42-sub-epic">4.2 <a href="../../.gitlab/issue_templates/sub-epic.md">Sub-Epic</a></h3>
+<p>A <strong>Sub-Epic</strong> breaks an Epic into smaller functional parts.</p>
+<h4 id="purpose_1">Purpose</h4>
+<ul>
+<li>Organize large Epics into logical components</li>
+<li>Represent major features or phases</li>
+</ul>
+<h4 id="template-structure_1">Template Structure</h4>
+<ul>
+<li>
+<p><strong>Description</strong><br/>
+  Explanation of the specific part of the Epic.</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong></p>
+</li>
+<li>Based on user or stakeholder requirements  </li>
+<li>
+<p>Written as a checklist</p>
+</li>
+<li>
+<p><strong>Definition of Done</strong></p>
+</li>
+<li>All <strong>Blocked by User Stories</strong> are completed and checked  </li>
+<li>All <strong>Acceptance Criteria</strong> are met and checked  </li>
+</ul>
+<h4 id="how-to-write_1">How to Write</h4>
+<ul>
+<li>Focus on functional outcomes</li>
+<li>Make acceptance criteria clear and testable</li>
+</ul>
+<h3 id="43-user-story">4.3 <a href="../../.gitlab/issue_templates/user-story.md">User Story</a></h3>
+<p>A <strong>User Story</strong> describes functionality from the user’s perspective.</p>
+<h4 id="purpose_2">Purpose</h4>
+<ul>
+<li>Capture user needs and value</li>
+<li>Serve as the main planning unit for sprints</li>
+</ul>
+<h4 id="template-structure_2">Template Structure</h4>
+<ul>
+<li>
+<p><strong>Description</strong><br/>
+  Description of the user need.</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong></p>
+</li>
+<li>Defines when the story is successful  </li>
+<li>
+<p>Written as a checklist</p>
+</li>
+<li>
+<p><strong>Definition of Done</strong></p>
+</li>
+<li>All <strong>Child items / Tasks</strong> are completed and checked  </li>
+<li>All <strong>Acceptance Criteria</strong> are met and checked  </li>
+</ul>
+<h4 id="how-to-write_2">How to Write</h4>
+<ul>
+<li>Use a user-focused format (e.g., <em>As a user, I want...</em>)</li>
+<li>Ensure acceptance criteria are measurable and testable</li>
+<li>Ensure acceptance criteria is focussed on user based requirements</li>
+</ul>
+<h3 id="44-task">4.4 <a href="../../.gitlab/issue_templates/task.md">Task</a></h3>
+<p>A <strong>Task</strong> is the smallest unit of work.</p>
+<h4 id="purpose_3">Purpose</h4>
+<ul>
+<li>Define concrete implementation steps</li>
+<li>Break User Stories into actionable work</li>
+</ul>
+<h4 id="template-structure_3">Template Structure</h4>
+<ul>
+<li><strong>Description</strong><br/>
+  Clear explanation of the work to be done</li>
+</ul>
+<h4 id="how-to-write_3">How to Write</h4>
+<ul>
+<li>Keep tasks small and specific</li>
+<li>Each task should represent one clear action</li>
+</ul>
+<h2 id="5-relationship-between-work-items">5. Relationship Between Work Items</h2>
+<p>Each level in the backlog serves a specific purpose:</p>
+<ul>
+<li><strong>Epics</strong> define large goals  </li>
+<li><strong>Sub-Epics</strong> break those goals into functional areas  </li>
+<li><strong>User Stories</strong> describe user-facing functionality  </li>
+<li><strong>Tasks</strong> define the actual work required  </li>
+</ul>
+<p>This structure ensures:</p>
+<ul>
+<li>Clear traceability from idea to implementation  </li>
+<li>Better planning and prioritization  </li>
+<li>Improved collaboration within the team  </li>
+</ul>
+<h2 id="6-completion-flow">6. Completion Flow</h2>
+<p>Work progresses through the hierarchy from top to bottom:</p>
+<ol>
+<li>An <strong>Epic</strong> is defined  </li>
+<li>It is split into <strong>Sub-Epics</strong> if needed</li>
+<li>Sub-Epics are broken down into <strong>User Stories</strong> </li>
+<li>User Stories are implemented through <strong>Tasks</strong> </li>
+</ol>
+<p>Completion flows upward:</p>
+<div class="mermaid">flowchart LR
+    A[Tasks completed] --&gt; B[User Stories done]
+    B --&gt; C[Sub-Epics done]
+    C --&gt; D[Epic done]</div>
+<h2 id="8-how-to-commit">8. How to Commit</h2>
+<p>To ensure clear and traceable commit history, follow this convention for commit messages:</p>
+<p><strong>Format:</strong></p>
+<p>#<userstorynumber> Add/Update/Delete/Hotfix: Short explanation</userstorynumber></p>
+<p><strong>Examples:</strong></p>
+<p>#42 Add: Implement login endpoint
+  #15 Update: Refactor user authentication logic
+  #8 Delete: Remove deprecated API routes
+  #23 Hotfix: Fix null pointer exception in payment service</p>
+<p><strong>Guidelines:</strong>
+- Always reference the relevant user story number at the start (e.g., #42)
+- Use one of: Add, Update, Delete, Hotfix
+- Provide a concise explanation of the change
+- Use English for consistency</p>
+<h2 id="9-how-to-weight-issues">9. How to Weight Issues</h2>
+<p>Each issue should be assigned a weight from 1 to 5, representing the estimated effort required:</p>
+<table>
+<thead>
+<tr>
+<th>Weight</th>
+<th>Estimated Time</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>2 weeks</td>
+<td>Very large/complex</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1 week</td>
+<td>Large</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2 days</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1 day</td>
+<td>Small</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Half a day</td>
+<td>Very small/trivial</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Guidelines:</strong>
+- Assign weights during backlog refinement or sprint planning
+- Use the weight to help with planning and prioritization
+- Adjust weights if estimates change during implementation</p>
+<h2 id="10-how-to-create-a-branch">10. How to Create a Branch</h2>
+<p>To create a branch for your work, follow these steps:</p>
+<ol>
+<li>Go to the relevant User Story issue in GitLab.</li>
+<li>Click on the <strong>Create branch</strong> button (usually found near the top or in the sidebar).</li>
+<li>Use the automatically suggested branch name provided by GitLab. This ensures consistency and traceability between issues and branches.</li>
+<li>Start working on your branch as usual.</li>
+</ol>
+<p><strong>Tip:</strong>
+- Using the auto-generated branch name helps link your work to the issue and keeps the repository organized.</p>
+<h2 id="12-summary">12. Summary</h2>
+<p>This document outlines our Scrum workflow and best practices for collaboration:</p>
+<ul>
+<li>We use a clear backlog hierarchy: Epics, Sub-Epics, User Stories, and Tasks, each with its own template and purpose.</li>
+<li>Work is broken down into manageable pieces, with progress tracked through defined criteria and completion flows from Tasks up to Epics.</li>
+<li>Commit messages follow a strict format referencing the user story and type of change for traceability.</li>
+<li>Issues are weighted from 1 (half a day) to 5 (two weeks) to support planning and prioritization.</li>
+<li>Branches are created directly from user story issues in GitLab, using the auto-generated branch name for consistency.</li>
+<li>Merge requests are created for every feature or fix, with all team members assigned as reviewers to ensure code quality and shared ownership.</li>
+</ul>
+<p>By following these guidelines, we ensure our workflow is transparent, efficient, and scalable, enabling the team to deliver high-quality results collaboratively.</p></div>
+</div>
+</div>
+</main>
+</div>
+</article>
+</div>
+<script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+</div>
+</main>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.sections", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+<script src="../../../assets/javascripts/bundle.220ee61c.min.js"></script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>
