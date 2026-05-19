@@ -56,7 +56,7 @@ bool SPS30::begin(TwoWire &wire, uint8_t maxRetries, bool doScan)
         return true;
     }
 
-    DEBUG_FAIL("SPS30 initialization failed");
+    DEBUG_WARN("SPS30 initialization attempt batch failed");
     return false;
 }
 
@@ -97,6 +97,12 @@ bool SPS30::stopMeasurement()
         return false;
     _measuring = false;
     return sendCommand(SPS30_CMD_STOP_MEASUREMENT);
+}
+
+void SPS30::resetState()
+{
+    _initialized = false;
+    _measuring = false;
 }
 
 bool SPS30::isDataReady()
@@ -154,7 +160,7 @@ SPS30_measurement SPS30::readData(uint8_t maxRetries)
         wait(200 * (attempt + 1));
     }
 
-    DEBUG_FAIL("SPS30 read failed after retries");
+    DEBUG_WARN("SPS30 read failed after retries");
     return out;
 }
 
@@ -170,6 +176,26 @@ bool SPS30::readMeasurement(SPS30_measurement &out)
     if (!readResponse(data, 60))
     {
         return false;
+    }
+
+    if (debug_raw_next_read)
+    {
+        String raw = "";
+        for (int i = 0; i < 18; i++)
+        {
+            if (data[i] < 16)
+            {
+                raw += "0";
+            }
+            raw += String(data[i], HEX);
+            if (i < 17)
+            {
+                raw += " ";
+            }
+        }
+        raw.toUpperCase();
+        DEBUG_KV("SPS30 raw first 18 bytes", raw);
+        debug_raw_next_read = false;
     }
 
     // Verify CRC and extract floats
@@ -191,15 +217,15 @@ bool SPS30::readMeasurement(SPS30_measurement &out)
         values[i] = bytesToFloat(fb);
     }
 
-    out.mc_1p0 = values[0];
-    out.mc_2p0 = values[1];
-    out.mc_4p0 = values[2];
-    out.mc_10p0 = values[3];
-    out.nc_0p5 = values[4];
-    out.nc_1p0 = values[5];
-    out.nc_2p5 = values[6];
-    out.nc_4p0 = values[7];
-    out.nc_10p0 = values[8];
+    out.mc_1p0 = values[0] / 1000.0f;
+    out.mc_2p0 = values[1] / 1000.0f;
+    out.mc_4p0 = values[2] / 1000.0f;
+    out.mc_10p0 = values[3] / 1000.0f;
+    out.nc_0p5 = values[4] / 1000.0f;
+    out.nc_1p0 = values[5] / 1000.0f;
+    out.nc_2p5 = values[6] / 1000.0f;
+    out.nc_4p0 = values[7] / 1000.0f;
+    out.nc_10p0 = values[8] / 1000.0f;
     out.typical_particle_size = values[9];
     return true;
 }
