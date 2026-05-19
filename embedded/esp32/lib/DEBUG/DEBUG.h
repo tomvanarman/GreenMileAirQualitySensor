@@ -1,10 +1,12 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef LIB_DEBUG_DEBUG_H_
+#define LIB_DEBUG_DEBUG_H_
 
 #include <Arduino.h>
 
 // Toggle debug logging globally
 #define DEBUG 1
+
+void debugWarnIndicator() __attribute__((weak));
 
 #if DEBUG
 #define DEBUG_LOG(x) Serial.print(x)
@@ -14,30 +16,33 @@
 // --- Structured logging helpers ---
 
 // Section headers
-#define DEBUG_SECTION(title)                                                       \
-    do                                                                             \
-    {                                                                              \
-        Serial.println(F("\n==================================================")); \
-        Serial.println(title);                                                     \
-        Serial.println(F("==================================================\n")); \
+#define DEBUG_SECTION(title)                                            \
+    do {                                                                \
+        Serial.println(                                                 \
+            F("\n==================================================")); \
+        Serial.println(title);                                          \
+        Serial.println(                                                 \
+            F("==================================================\n")); \
     } while (0)
 
 // API Header
-#define DEBUG_SECTION_API(title)                                                   \
-    do                                                                             \
-    {                                                                              \
-        Serial.println(F("\n++++++++++++++++++++++++++++++++++++++++++++++++++")); \
-        Serial.println(title);                                                     \
-        Serial.println(F("++++++++++++++++++++++++++++++++++++++++++++++++++\n")); \
+#define DEBUG_SECTION_API(title)                                        \
+    do {                                                                \
+        Serial.println(                                                 \
+            F("\n++++++++++++++++++++++++++++++++++++++++++++++++++")); \
+        Serial.println(title);                                          \
+        Serial.println(                                                 \
+            F("++++++++++++++++++++++++++++++++++++++++++++++++++\n")); \
     } while (0)
 
 // Subsection or block
-#define DEBUG_BLOCK(title)                                                         \
-    do                                                                             \
-    {                                                                              \
-        Serial.println(F("\n--------------------------------------------------")); \
-        Serial.println(title);                                                     \
-        Serial.println(F("--------------------------------------------------"));   \
+#define DEBUG_BLOCK(title)                                              \
+    do {                                                                \
+        Serial.println(                                                 \
+            F("\n--------------------------------------------------")); \
+        Serial.println(title);                                          \
+        Serial.println(                                                 \
+            F("--------------------------------------------------"));   \
     } while (0)
 
 // Step markers
@@ -47,12 +52,16 @@
 // Success / failure
 #define DEBUG_OK(msg) Serial.println("[OK] " + String(msg))
 #define DEBUG_FAIL(msg) Serial.println("[ERROR] " + String(msg))
-#define DEBUG_WARN(msg) Serial.println("[WARN] " + String(msg))
+#define DEBUG_WARN(msg)                          \
+    do {                                         \
+        Serial.println("[WARN] " + String(msg)); \
+        if (debugWarnIndicator)                  \
+            debugWarnIndicator();                \
+    } while (0)
 #define DEBUG_INFO(msg) Serial.println("[INFO] " + String(msg))
 
 // Key-value aligned output
-#define DEBUG_KV(key, value) \
-    Serial.println(String(key) + " : " + String(value))
+#define DEBUG_KV(key, value) Serial.println(String(key) + " : " + String(value))
 
 // Blank line
 #define DEBUG_NEWLINE() Serial.println()
@@ -72,6 +81,6 @@
 #define DEBUG_KV(key, value)
 #define DEBUG_NEWLINE()
 
-#endif // DEBUG
+#endif  // DEBUG
 
-#endif // DEBUG_H
+#endif  // LIB_DEBUG_DEBUG_H_

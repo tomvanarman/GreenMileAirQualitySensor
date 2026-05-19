@@ -40,10 +40,10 @@ void NetworkServer::handleSave()
     String device_id = server_.arg("device_id");
     String device_key = server_.arg("device_key");
 
-    if (ssid.isEmpty() || pass.isEmpty())
+    if (device_id.isEmpty() || device_key.isEmpty())
     {
         DEBUG_FAIL("Missing field in /save");
-        server_.send(400, "text/plain", "Missing field");
+        server_.send(400, "text/plain", "Device ID and Device Key are required");
         return;
     }
 
