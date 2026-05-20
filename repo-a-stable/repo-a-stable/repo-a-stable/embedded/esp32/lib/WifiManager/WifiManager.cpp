@@ -5,7 +5,7 @@
 #include "DEBUG.h"
 #include "HelpMethod.h"
 
-// Attempts a blocking Wi‑Fi connection using stored credentials.
+// Attempts a blocking Wi-Fi connection using stored credentials.
 // Returns immediately if credentials are missing. Times out after
 // connection_timeout_. [TODO]: Return a bool to indicate success/failure to
 // callers instead of logging-only.
@@ -24,7 +24,7 @@ void WiFiManager::Connect() {
              credential_manager_.GetPassword().c_str());
   DEBUG_INFO("Connecting to WiFi...");
 
-  int64_t start = millis();  // linter does not allow unsigned long
+  int64_t start = millis(); // linter does not allow unsigned long
   while (WiFi.status() != WL_CONNECTED) {
     if (millis() - start > connection_timeout_) {
       DEBUG_FAIL("Connection timeout! Invalid credentials?");
