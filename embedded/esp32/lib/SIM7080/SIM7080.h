@@ -11,6 +11,7 @@ public:
     void initialize();
     void startModem();
     void setupNetwork();
+    void shutdownForDeepSleep();
 
     bool mqttPublish(const char *deviceId, const char *topic, const char *payload);
     // Perform an HTTPS POST request
@@ -32,4 +33,5 @@ private:
     const char *apn_;
     const char *mqttHost_;
     uint32_t mqttPort_;
+    bool modemStarted_ = false;
 };

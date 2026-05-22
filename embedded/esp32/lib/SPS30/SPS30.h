@@ -15,6 +15,8 @@
 #define SPS30_CMD_STOP_MEASUREMENT 0x0104
 #define SPS30_CMD_READ_MEASUREMENT 0x0300
 #define SPS30_CMD_GET_DATA_READY 0x0202
+#define SPS30_CMD_SLEEP 0x1001
+#define SPS30_CMD_WAKE_UP 0x1103
 #define SPS30_CMD_DEVICE_INFO 0xD003
 #define SPS30_CMD_RESET 0xD304
 
@@ -41,6 +43,8 @@ public:
   bool begin(TwoWire &wire, uint8_t maxRetries = 3, bool doScan = false);
   bool startMeasurement();
   bool stopMeasurement();
+  bool sleep();
+  bool wakeUp(TwoWire &wire);
   SPS30_measurement readData(uint8_t maxRetries = 3);
   bool isInitialized() const { return _initialized; }
   void resetState();

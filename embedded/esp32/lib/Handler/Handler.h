@@ -57,6 +57,11 @@ class Handler {
   void enterDeepSleep(
       LEDStrip& strip,  // NOLINT(runtime/references)
       SegmentDisplay& segmentDisplay,  // NOLINT(runtime/references)
+      SPS30& sps30,  // NOLINT(runtime/references)
+      TwoWire& sensorWire,  // NOLINT(runtime/references)
+      SIM7080& sim7080,  // NOLINT(runtime/references)
+      int sensorSdaPin,
+      int sensorSclPin,
       bool useSIM);
 };
 // clang-format on
