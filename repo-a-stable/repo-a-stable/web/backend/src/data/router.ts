@@ -61,7 +61,11 @@ dataRouter.post('/test', (req, res) => {
 
 dataRouter.post('/sps30', async (req, res) => {
     try {
-        await Promise.all([SPS30Model.insert(req.body), QualityModel.calculateFromSPS30(req.body)]);
+        await Promise.all([
+            SPS30Model.insert(req.body),
+            QualityModel.calculateFromSPS30(req.body),
+            DeviceModel.touchDevice(req.body.Device_id),
+        ]);
         res.status(204).end();
     } catch (error) {
         console.log('Error processing SPS30 data:', error);
@@ -71,7 +75,10 @@ dataRouter.post('/sps30', async (req, res) => {
 
 dataRouter.post('/sht41', async (req, res) => {
     try {
-        await SHT41Model.insert(req.body);
+        await Promise.all([
+            SHT41Model.insert(req.body),
+            DeviceModel.touchDevice(req.body.Device_id),
+        ]);
         res.status(204).end();
     } catch (error) {
         console.log('Error processing SHT41 data:', error);
@@ -81,7 +88,10 @@ dataRouter.post('/sht41', async (req, res) => {
 
 dataRouter.post('/battery', async (req, res) => {
     try {
-        await BatteryModel.insert(req.body);
+        await Promise.all([
+            BatteryModel.insert(req.body),
+            DeviceModel.touchDevice(req.body.Device_id),
+        ]);
         res.status(204).end();
     } catch (error) {
         console.log('Error processing Battery data:', error);
