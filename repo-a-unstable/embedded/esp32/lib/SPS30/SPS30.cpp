@@ -9,6 +9,7 @@ bool SPS30::begin(TwoWire &wire, uint8_t maxRetries, bool doScan)
         return true;
 
     _wire = &wire;
+    wakeUp(wire);
 
     // Optinal I2C scan for checking correct wiring and debugging
     if (doScan)
@@ -97,6 +98,38 @@ bool SPS30::stopMeasurement()
         return false;
     _measuring = false;
     return sendCommand(SPS30_CMD_STOP_MEASUREMENT);
+}
+
+bool SPS30::sleep()
+{
+    if (!_wire)
+        return false;
+
+    if (_measuring)
+    {
+        stopMeasurement();
+        wait(20);
+    }
+
+    bool slept = sendCommand(SPS30_CMD_SLEEP);
+    if (slept)
+    {
+        _initialized = false;
+        _measuring = false;
+    }
+    return slept;
+}
+
+bool SPS30::wakeUp(TwoWire &wire)
+{
+    _wire = &wire;
+
+    sendCommand(SPS30_CMD_WAKE_UP);
+    wait(5);
+
+    bool woke = sendCommand(SPS30_CMD_WAKE_UP);
+    wait(5);
+    return woke;
 }
 
 void SPS30::resetState()

@@ -233,6 +233,7 @@ void SIM7080::startModem() {
     }
 
     DEBUG_OK("Modem started!");
+    modemStarted_ = true;
 }
 
 void SIM7080::setupNetwork() {
@@ -325,6 +326,51 @@ void SIM7080::setupNetwork() {
     }
 
     DEBUG_OK("Network registration completed!");
+}
+
+void SIM7080::shutdownForDeepSleep() {
+    DEBUG_SECTION("SIM7080 Deep Sleep Shutdown");
+
+    if (!_pmu.begin(Wire, AXP2101_SLAVE_ADDRESS, I2C_SDA, I2C_SCL)) {
+        DEBUG_WARN("PMU unavailable, modem rails could not be disabled");
+        return;
+    }
+
+    if (modemStarted_) {
+        _modem.sendAT("+SMDISC");
+        _modem.waitResponse(2000L);
+
+        _modem.gprsDisconnect();
+
+        _modem.sendAT("+CFUN=0");
+        _modem.waitResponse(10000L);
+
+        _modem.poweroff();
+        _modem.waitResponse(5000L);
+    }
+
+    Serial1.end();
+    modemStarted_ = false;
+
+    digitalWrite(BOARD_MODEM_PWR_PIN, LOW);
+    digitalWrite(BOARD_MODEM_DTR_PIN, LOW);
+    pinMode(BOARD_MODEM_PWR_PIN, INPUT);
+    pinMode(BOARD_MODEM_DTR_PIN, INPUT);
+    pinMode(BOARD_MODEM_RXD_PIN, INPUT);
+    pinMode(BOARD_MODEM_TXD_PIN, INPUT);
+
+    DEBUG_INFO("Modem rails shutting down; ESP32 will enter deep sleep next");
+    Serial.flush();
+    wait(50);
+
+    _pmu.disableDC3();
+    _pmu.disableBLDO1();
+    _pmu.disableVbusVoltageMeasure();
+    _pmu.disableBattVoltageMeasure();
+    _pmu.disableSystemVoltageMeasure();
+    _pmu.disableBattDetection();
+
+    DEBUG_OK("SIM7080 modem rails disabled for deep sleep");
 }
 
 bool SIM7080::ensureConnected(uint32_t timeoutMs) {

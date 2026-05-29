@@ -23,7 +23,7 @@ The embedded devices are deployed in the field to collect environmental data. Ea
   - **SHT41 Sensor** — Measures temperature and humidity.
 
 - **Connectivity**
-  - **SIM Module (LTE)** — Sends data securely to the backend via HTTPS (`/api` endpoints).
+  - **SIM Module (LTE)** — Sends data securely to the backend via MQTT (Message Queuing Telemetry Transport).
 
 - **Additional Hardware**
   - 8-digit display module  
@@ -31,7 +31,7 @@ The embedded devices are deployed in the field to collect environmental data. Ea
 
 - **Communication Protocols**
   - Sensors communicate with the microcontroller via **I2C / UART**
-  - Data is transmitted to the server via **HTTPS over LTE**
+  - Data is transmitted to the server via **MQTT over LTE**
 
 
 ### 2. Server Infrastructure
@@ -51,8 +51,14 @@ A Linux-based server hosts all backend services within a [**Dockerized environme
 
 #### Backend Services
 
+
+- **MQTT Broker**
+  - Receives data from IoT devices via MQTT publish messages
+  - Handles topic-based message routing
+  - Forwards data to backend services for processing
+
 - **Node.js API**
-  - Receives data from IoT devices via HTTPS POST requests (`/api/*`)
+  - Subscribes to relevant MQTT topics
   - Processes and validates incoming data
   - Stores data in the database
   - Serves data to frontend applications
@@ -76,13 +82,13 @@ A Linux-based server hosts all backend services within a [**Dockerized environme
 
 - **Cellular Network (LTE)**
   - Acts as the bridge between IoT devices and the server
-  - Devices send HTTPS requests to the backend API
+  - Devices send MQTT messages to the MQTT broker
 
 - **Internet**
   - Enables communication between devices, server, and users
 
 - **Security**
-  - All external communication occurs over **HTTPS (port 443)**
+  - All external communication occurs over **MQTTS (MQTT over TLS, port 1883)**
   - SSL certificates are automatically managed
 
 
@@ -108,17 +114,20 @@ End users interact with the system through web-based interfaces:
   - Developers connect to the server via **SSH (port 22)**
   - Used for deployment, maintenance, and debugging
 
+- **Environment** \
+  In the gitlab we have a develop and a main branch that pushes to an unstable or stable branch on the public github repo, depending on the gitlab branch. The unstable version is only being used locally and there is not extra testing and staging environmnet on the server to test these.
+
 
 ## Data Flow
 
 1. Sensors collect environmental data (fine dust, temperature, humidity)  
 2. Microcontroller processes the data  
-3. Device sends data via **LTE (HTTPS POST)** to the backend API  
-4. Reverse proxy routes the request to the **Node.js API**  
+3. Device sends data via **LTE (MQTT publish)** to the MQTT broker  
+4. MQTT broker forwards the message to the **Node.js API**
 5. API processes and stores data in **MariaDB**  
 6. Data is accessed by:
-   - **Frontend** for user interaction  
-   - **Grafana** for visualization and analytics  
+  - **Frontend** for user interaction  
+  - **Grafana** for visualization and analytics  
 
 
 ## Stakeholders

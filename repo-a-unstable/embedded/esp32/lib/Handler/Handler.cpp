@@ -130,6 +130,10 @@ bool Handler::setupSHT41(SHT41Sensor& sht41, TwoWire& wire, RGBLight& rgb) {
 }
 
 void Handler::enterDeepSleep(LEDStrip& strip, SegmentDisplay& segmentDisplay,
-                             bool useSIM) {
-    deepSleepManager.enterDeepSleep(strip, segmentDisplay, useSIM);
+                             SPS30& sps30, TwoWire& sensorWire,
+                             SIM7080& sim7080, int sensorSdaPin,
+                             int sensorSclPin, bool useSIM) {
+    deepSleepManager.enterDeepSleep(strip, segmentDisplay, sps30, sensorWire,
+                                    sim7080, sensorSdaPin, sensorSclPin,
+                                    useSIM);
 }

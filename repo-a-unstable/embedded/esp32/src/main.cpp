@@ -239,7 +239,8 @@ void loop() {
     if (sps30SentThisWake && sht41SentThisWake) {
         DEBUG_OK("All data sent successfully, entering deep sleep");
         wait(500);
-        handler.enterDeepSleep(strip, segmentDisplay, useSIM);
+        handler.enterDeepSleep(strip, segmentDisplay, sps30, WireSensors,
+                               sim7080, kSensorSdaPin, kSensorSclPin, useSIM);
     }
 
     wait(250);
@@ -342,6 +343,8 @@ void initializeSensorI2CBus() {
     WireSensors.begin(kSensorSdaPin, kSensorSclPin);
     WireSensors.setClock(kSensorI2cClockHz);
     WireSensors.setTimeOut(kSensorI2cTimeoutMs);
+
+    sps30.wakeUp(WireSensors);
 
     DEBUG_INFO("Waiting for sensor power-up");
     wait(kSensorPowerSettleMs);

@@ -2,6 +2,8 @@
 
 #include <DEBUG.h>
 #include <DeepSleepManager.h>
+#include <esp_bt.h>
+#include <esp_wifi.h>
 
 time_t DeepSleepManager::getNextQuarterHourEpoch() {
   time_t now;
@@ -40,8 +42,46 @@ uint64_t DeepSleepManager::getSleepTimeToNextQuarterHourUs() {
   return static_cast<uint64_t>(sleepSeconds) * 1000000ULL;
 }
 
+void DeepSleepManager::preparePeripheralsForDeepSleep(
+    LEDStrip &strip, SegmentDisplay &segmentDisplay, SPS30 &sps30,
+    TwoWire &sensorWire, SIM7080 &sim7080, int sensorSdaPin,
+    int sensorSclPin, bool useSIM) {
+  DEBUG_SECTION("Deep Sleep Peripheral Shutdown");
+
+  strip.clear();
+  segmentDisplay.clearDisplay();
+
+  if (sps30.isInitialized()) {
+    if (sps30.sleep()) {
+      DEBUG_OK("SPS30 entered sensor sleep mode");
+    } else {
+      DEBUG_WARN("SPS30 sleep command failed");
+    }
+  }
+  sps30.resetState();
+
+  sensorWire.end();
+
+  pinMode(sensorSdaPin, INPUT);
+  pinMode(sensorSclPin, INPUT);
+
+  if (!useSIM) {
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+    esp_wifi_stop();
+  }
+
+  btStop();
+  esp_bt_controller_disable();
+
+  sim7080.shutdownForDeepSleep();
+}
+
 void DeepSleepManager::enterDeepSleep(LEDStrip &strip,
                                       SegmentDisplay &segmentDisplay,
+                                      SPS30 &sps30, TwoWire &sensorWire,
+                                      SIM7080 &sim7080, int sensorSdaPin,
+                                      int sensorSclPin,
                                       bool useSIM) {
   DEBUG_SECTION("Deep Sleep");
 
@@ -51,15 +91,12 @@ void DeepSleepManager::enterDeepSleep(LEDStrip &strip,
   if (now < 100000) {
     DEBUG_WARN("Current time is not valid, fallback sleep for 60 seconds");
 
-    strip.clear();
-    segmentDisplay.clearDisplay();
-
-    if (!useSIM) {
-      WiFi.disconnect(true);
-      WiFi.mode(WIFI_OFF);
-    }
+    preparePeripheralsForDeepSleep(strip, segmentDisplay, sps30, sensorWire,
+                                   sim7080, sensorSdaPin, sensorSclPin,
+                                   useSIM);
 
     esp_sleep_enable_timer_wakeup(60ULL * 1000000ULL);
+    DEBUG_INFO("ESP32 entering deep sleep now");
     delay(100);
     esp_deep_sleep_start();
     return;
@@ -80,15 +117,11 @@ void DeepSleepManager::enterDeepSleep(LEDStrip &strip,
   DEBUG_KV("Next wake time", String(asctime(&nextInfo)));
   DEBUG_KV("Sleep duration (seconds)", sleepTimeUs / 1000000ULL);
 
-  strip.clear();
-  segmentDisplay.clearDisplay();
-
-  if (!useSIM) {
-    WiFi.disconnect(true);
-    WiFi.mode(WIFI_OFF);
-  }
+  preparePeripheralsForDeepSleep(strip, segmentDisplay, sps30, sensorWire,
+                                 sim7080, sensorSdaPin, sensorSclPin, useSIM);
 
   esp_sleep_enable_timer_wakeup(sleepTimeUs);
+  DEBUG_INFO("ESP32 entering deep sleep now");
   wait(100);
   esp_deep_sleep_start();
 }

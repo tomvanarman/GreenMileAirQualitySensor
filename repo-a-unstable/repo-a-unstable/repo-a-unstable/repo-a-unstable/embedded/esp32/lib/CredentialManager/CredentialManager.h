@@ -11,6 +11,8 @@ public:
 
     // Validates that all required fields are non-empty.
     bool ValidateCredentials();
+    bool ValidateWifiCredentials();
+    bool ValidateDeviceCredentials();
 
     // Stores credentials to NVS.
     void SaveCredentials(const String &ssid, const String &password, const String &device_id, const String &device_key);
