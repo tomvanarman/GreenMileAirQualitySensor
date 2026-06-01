@@ -215,8 +215,8 @@ void Connect() {
 
 ## Code Formatting
 
-For the code formatting, we won't use the Google C++ Style Guide's formatting rules directly.
-Instead, we use the default formatting provided by Visual Studio Code.
+Code formatting is enforced with `clang-format` using the repository `.clang-format` file. The
+configuration is based on Google style, adjusted to the project's documented 4-space indentation.
 
 ## Header Files
 

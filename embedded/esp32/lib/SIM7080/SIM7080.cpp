@@ -136,8 +136,8 @@ int64_t utcEpochSecondsFromCivilTime(int year, int month, int day, int hour,
 
 void SIM7080::initialize() {
     // ----- Initialize Power Chip -----
-    DEBUG_SECTION("Initialize Power Chip");
-    DEBUG_INFO("Starting power chip...");
+    DEBUG_TRACE_SECTION("Initialize Power Chip");
+    DEBUG_TRACE("Starting power chip...");
 
     if (!_pmu.begin(Wire, AXP2101_SLAVE_ADDRESS, I2C_SDA, I2C_SCL)) {
         DEBUG_FAIL("Failed to initialize power chip...");
@@ -191,7 +191,7 @@ void SIM7080::initialize() {
     _pmu.enableBattVoltageMeasure();
     _pmu.enableSystemVoltageMeasure();
 
-    DEBUG_OK("Power chip initialized!");
+    DEBUG_TRACE("Power chip initialized!");
 }
 
 void SIM7080::startModem() {
@@ -206,13 +206,11 @@ void SIM7080::startModem() {
     digitalWrite(BOARD_MODEM_PWR_PIN, LOW);
     digitalWrite(BOARD_MODEM_DTR_PIN, LOW);
 
-    DEBUG_INFO("Waiting for modem AT response...");
+    DEBUG_TRACE("Waiting for modem AT response...");
 
     int retry = 0;
     int powerCycleAttempts = 0;
     while (!_modem.testAT(1000)) {
-        DEBUG_WARN("No AT response from modem");
-
         if (retry++ > 6) {
             DEBUG_WARN("Power cycling modem...");
 
@@ -227,7 +225,7 @@ void SIM7080::startModem() {
             retry = 0;
             powerCycleAttempts++;
 
-            DEBUG_WARN("Modem did not respond, power-cycle attempt " +
+            DEBUG_WARN("Modem did not respond after AT retries, power-cycle attempt " +
                        String(powerCycleAttempts));
         }
     }
@@ -238,8 +236,8 @@ void SIM7080::startModem() {
 
 void SIM7080::setupNetwork() {
     // ----- Setup Network -----
-    DEBUG_SECTION("Setup Network");
-    DEBUG_INFO("Setting up network...");
+    DEBUG_TRACE_SECTION("Setup Network");
+    DEBUG_TRACE("Setting up network...");
 
     if (_modem.getSimStatus() != SIM_READY) {
         DEBUG_FAIL("SIM Card is not inserted!!!");
@@ -268,7 +266,7 @@ void SIM7080::setupNetwork() {
         DEBUG_FAIL("Enable RF Failed!");
     }
 
-    DEBUG_OK("Network setup completed!");
+    DEBUG_TRACE("Network setup completed!");
 
     // ----- Registering to Network -----
     DEBUG_SECTION("Registering to Network");
@@ -287,7 +285,7 @@ void SIM7080::setupNetwork() {
             wait(1000);
         }
     } while (s != REG_OK_HOME && s != REG_OK_ROAMING);
-    DEBUG_KV("Network register info:", register_info[s]);
+    DEBUG_TRACE_KV("Network register info:", register_info[s]);
 
     _modem.sendAT("+CNCFG=0,1,\"", apn_, "\"");
     if (_modem.waitResponse() != 1) {
@@ -302,7 +300,7 @@ void SIM7080::setupNetwork() {
     }
 
     bool res = _modem.isGprsConnected();
-    DEBUG_KV("GPRS status:", res ? "connected" : "not connected");
+    DEBUG_TRACE_KV("GPRS status:", res ? "connected" : "not connected");
 
     _modem.sendAT("+CNACT?");
     if (_modem.waitResponse() != 1) {
@@ -399,8 +397,8 @@ bool SIM7080::ensureConnected(uint32_t timeoutMs) {
 
 bool SIM7080::mqttPublish(const char* deviceId, const char* topic,
                           const char* payload) {
-    DEBUG_SECTION("SIM7080 MQTT Publish");
-    DEBUG_KV("MQTT topic", topic);
+    DEBUG_TRACE_SECTION("SIM7080 MQTT Publish");
+    DEBUG_TRACE_KV("MQTT topic", topic);
 
     _modem.sendAT("+SMCONF=\"URL\",\"", mqttHost_, "\",\"", mqttPort_, "\"");
     if (_modem.waitResponse() != 1) {
@@ -414,13 +412,13 @@ bool SIM7080::mqttPublish(const char* deviceId, const char* topic,
         return false;
     }
 
-    DEBUG_INFO("Connecting SIM MQTT client...");
+    DEBUG_TRACE("Connecting SIM MQTT client...");
     _modem.sendAT("+SMCONN");
     if (_modem.waitResponse(10000L) != 1) {
         DEBUG_FAIL("MQTT connect failed");
         return false;
     }
-    DEBUG_OK("SIM MQTT connected");
+    DEBUG_TRACE("SIM MQTT connected");
 
     _modem.sendAT("+SMPUB=\"", topic, "\",", strlen(payload), ",0,0");
     if (_modem.waitResponse(">") != 1) {
@@ -433,7 +431,7 @@ bool SIM7080::mqttPublish(const char* deviceId, const char* topic,
         DEBUG_FAIL("MQTT publish failed");
         return false;
     }
-    DEBUG_OK("SIM MQTT published");
+    DEBUG_TRACE("SIM MQTT published");
 
     _modem.sendAT("+SMDISC");
     _modem.waitResponse();

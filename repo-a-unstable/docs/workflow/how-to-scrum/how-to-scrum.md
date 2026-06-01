@@ -221,7 +221,7 @@ Each issue should be assigned a weight from 1 to 5, representing the estimated e
 |--------|----------------|-----------------------|
 |   5    | 2 weeks        | Very large/complex    |
 |   4    | 1 week         | Large                 |
-|   3    | 2 days         | Medium                |
+|   3    | 3 days         | Medium                |
 |   2    | 1 day          | Small                 |
 |   1    | Half a day     | Very small/trivial    |
 
