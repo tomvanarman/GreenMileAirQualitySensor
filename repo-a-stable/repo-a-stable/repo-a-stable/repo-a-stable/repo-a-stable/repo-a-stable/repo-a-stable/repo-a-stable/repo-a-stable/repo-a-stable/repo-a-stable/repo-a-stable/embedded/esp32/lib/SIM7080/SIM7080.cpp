@@ -250,6 +250,38 @@ bool SIM7080::ensureConnected(uint32_t timeoutMs)
     return true;
 }
 
+bool SIM7080::mqttPublish(const char *deviceId, const char *topic, const char *payload) {
+    // Configure MQTT broker
+    _modem.sendAT("+SMCONF=\"URL\",\"", mqttHost_, "\",\"", mqttPort_, "\"");
+    if (_modem.waitResponse() != 1) { return false; }
+
+    _modem.sendAT("+SMCONF=\"CLIENTID\",\"", deviceId, "\"");
+    if (_modem.waitResponse() != 1) { return false; }
+
+    // Connect
+    _modem.sendAT("+SMCONN");
+    if (_modem.waitResponse(10000L) != 1) {
+        DEBUG_FAIL("MQTT connect failed");
+        return false;
+    }
+
+    // Publish
+    _modem.sendAT("+SMPUB=\"", topic, "\",", strlen(payload), ",0,0");
+    if (_modem.waitResponse(">") != 1) { return false; }
+
+    SerialAT.write(payload);
+    if (_modem.waitResponse(10000) != 1) {
+        DEBUG_FAIL("MQTT publish failed");
+        return false;
+    }
+
+    // Disconnect
+    _modem.sendAT("+SMDISC");
+    _modem.waitResponse();
+
+    return true;
+}
+
 bool SIM7080::httpPost(const char *device_id, const char *signature, const char *host, const char *path, const char *url, const char *data)
 {
     DEBUG_SECTION("Starting HTTPS POST request");
