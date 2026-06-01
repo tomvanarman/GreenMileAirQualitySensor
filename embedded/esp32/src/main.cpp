@@ -46,16 +46,9 @@ SHT41Sensor sht41;
 Handler handler;
 
 RGBLight rgbLight(14, 13, 12);
-bool rgbLightReady = false;
-
 SensorReadoutManager sensorReadout(sps30, sht41, payloadPublisher, timeService,
                                    sim7080, useSIM, SerialSPS30, WireSensors,
                                    kSps30RxPin, kSps30TxPin);
-
-void debugWarnIndicator() {
-    if (rgbLightReady)
-        rgbLight.warningBlink();
-}
 
 bool switchToSIMNetwork() {
     useSIM = true;
@@ -103,7 +96,6 @@ void setup() {
     DEBUG_TRACE_SECTION("Setup");
 
     handler.setupRGB(rgbLight);
-    rgbLightReady = true;
     handler.rgbInitialization(rgbLight);
 
     handler.setupCredentialManager(credential_manager, server, rgbLight);

@@ -37,13 +37,16 @@ export default class DeviceModel {
         const result = await db().query('update Device set revoked = 1 where id = ?', [id]);
         return result.affectedRows > 0;
     }
+    public static async touchDevice(id: string): Promise<void> {
+        await db().query('update Device set updated_at = CURRENT_TIMESTAMP where id = ?', [id]);
+    }
     public static async getDevices(): Promise<DeviceRow[]> {
         return await db().query(
             `
 SELECT
     d.id,
     d.name,
-    d.updated_at,
+    COALESCE(FROM_UNIXTIME(r.latest_time_unix), d.updated_at) AS updated_at,
     b.level
 FROM Device d
 LEFT JOIN (
@@ -58,6 +61,18 @@ LEFT JOIN (
      AND latest.max_time = db.time_unix
 ) b
   ON b.Device_id = d.id
+LEFT JOIN (
+    SELECT Device_id, MAX(time_unix) AS latest_time_unix
+    FROM (
+        SELECT Device_id, time_unix FROM SPS30
+        UNION ALL
+        SELECT Device_id, time_unix FROM SHT41
+        UNION ALL
+        SELECT Device_id, time_unix FROM DeviceBattery
+    ) readings
+    GROUP BY Device_id
+) r
+  ON r.Device_id = d.id
 WHERE d.revoked = 0
         `,
             []
