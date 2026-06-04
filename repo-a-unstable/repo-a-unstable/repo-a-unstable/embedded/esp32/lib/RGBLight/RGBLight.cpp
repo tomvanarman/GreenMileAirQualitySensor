@@ -6,22 +6,23 @@
 RGBLight::RGBLight(int r, int g, int b) : r(r), g(g), b(b) {}
 
 void RGBLight::setup() {
-    DEBUG_INFO("Initializing RGBLight");
+    DEBUG_TRACE("Initializing RGBLight");
     // Configure the RGBLight pins as outputs
     pinMode(r, OUTPUT);
     pinMode(g, OUTPUT);
     pinMode(b, OUTPUT);
 
-    setupColorCheck();
+    // Keep boot fast; enable DEBUG_VERBOSE and call setupColorCheck manually
+    // when checking RGB wiring.
     // Set all pins LOW initially (LEDs off)
     digitalWrite(r, LOW);
     digitalWrite(g, LOW);
     digitalWrite(b, LOW);
-    DEBUG_INFO("RGBLight setup completed");
+    DEBUG_TRACE("RGBLight setup completed");
 }
 
 void RGBLight::setupColorCheck() {
-    DEBUG_INFO("Setting up color check");
+    DEBUG_TRACE("Setting up color check");
     digitalWrite(r, HIGH);
     wait(1000);
     digitalWrite(r, LOW);
@@ -31,11 +32,11 @@ void RGBLight::setupColorCheck() {
     digitalWrite(b, HIGH);
     wait(1000);
     digitalWrite(b, LOW);
-    DEBUG_INFO("Color check completed");
+    DEBUG_TRACE("Color check completed");
 }
 
 void RGBLight::startInitialization() {
-    DEBUG_INFO("Starting RGBLight initialization sequence");
+    DEBUG_TRACE("Starting RGBLight initialization sequence");
     const int breathSteps = 50;
     const int breathDelay = 20;  // ms
     while (1) {

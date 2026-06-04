@@ -2,8 +2,8 @@
 #include <Handler.h>
 
 namespace {
-// NOLINTNEXTLINE(runtime/references)
-void probeI2CDevice(TwoWire& wire, uint8_t address, const char* name) {
+
+    void probeI2CDevice(TwoWire& wire, uint8_t address, const char* name) {
     wire.beginTransmission(address);
     uint8_t error = wire.endTransmission();
 
@@ -102,7 +102,6 @@ void Handler::setupCredentialManager(CredentialManager& credential_manager,
             "Invalid or missing device credentials, starting AP for "
             "configuration...");
         server.StartAP();
-        startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
         while (1) {
             server.HandleRequests();
@@ -136,6 +135,7 @@ bool Handler::setupSPS30(SPS30& sps30, HardwareSerial& serial, int rxPin,
     if (!sps30.begin(serial, rxPin, txPin, 1)) {
         DEBUG_WARN(
             "SPS30 not ready during setup, continuing with loop retries");
+        rgb.errorEncountered(SetupError::SENSOR_INIT_FAILED);
         return false;
     }
     disableRGB(rgb);
@@ -148,6 +148,7 @@ bool Handler::setupSHT41(SHT41Sensor& sht41, TwoWire& wire, RGBLight& rgb) {
     if (!sht41.begin(wire, 3)) {
         DEBUG_WARN(
             "SHT41 not ready during setup, continuing with loop retries");
+        rgb.errorEncountered(SetupError::SENSOR_INIT_FAILED);
         return false;
     }
     disableRGB(rgb);

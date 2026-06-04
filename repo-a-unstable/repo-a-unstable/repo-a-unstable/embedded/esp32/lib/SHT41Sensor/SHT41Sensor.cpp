@@ -25,9 +25,9 @@ bool SHT41Sensor::begin(TwoWire &wire, uint8_t maxRetries) {
   for (uint8_t attempt = 0; attempt < maxRetries; attempt++) {
     _wire->beginTransmission(kSht41Address);
     if (_wire->endTransmission() != 0) {
-      DEBUG_WARN(String("SHT41 init attempt ") + String(attempt + 1) +
-                 " failed");
-      wait(100 * (attempt + 1));
+      DEBUG_TRACE(String("SHT41 init attempt ") + String(attempt + 1) +
+                  " failed");
+      yield();
       continue;
     }
 
@@ -39,12 +39,12 @@ bool SHT41Sensor::begin(TwoWire &wire, uint8_t maxRetries) {
       return true;
     }
 
-    DEBUG_WARN(String("SHT41 init attempt ") + String(attempt + 1) +
-               " failed");
-    wait(100 * (attempt + 1));
+    DEBUG_TRACE(String("SHT41 init attempt ") + String(attempt + 1) +
+                " failed");
+    yield();
   }
 
-  DEBUG_WARN("SHT41 initialization attempt batch failed");
+  DEBUG_TRACE("SHT41 initialization attempt batch failed");
   return false;
 }
 
@@ -68,12 +68,12 @@ SHT41Data SHT41Sensor::readData(uint8_t maxRetries) {
       return data;
     }
 
-    DEBUG_WARN(String("SHT41 read attempt ") + String(attempt + 1) +
-               " failed");
-    wait(50 * (attempt + 1));
+    DEBUG_TRACE(String("SHT41 read attempt ") + String(attempt + 1) +
+                " failed");
+    yield();
   }
 
-  DEBUG_WARN("SHT41 read failed after retries");
+  DEBUG_TRACE("SHT41 read failed after retries");
   return data;
 }
 

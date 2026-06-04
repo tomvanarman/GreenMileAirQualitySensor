@@ -124,11 +124,14 @@ void loop() {
 
     sensorReadout.handle(credential_manager.GetDeviceID());
 
+
+    wait(500);
     if (sensorReadout.allSent()) {
         DEBUG_OK("All data sent successfully, entering deep sleep");
         handler.enterDeepSleep(sps30, WireSensors, sim7080, kSensorSdaPin,
                                kSensorSclPin, useSIM);
     }
+    
 
     wait(10);
 }
