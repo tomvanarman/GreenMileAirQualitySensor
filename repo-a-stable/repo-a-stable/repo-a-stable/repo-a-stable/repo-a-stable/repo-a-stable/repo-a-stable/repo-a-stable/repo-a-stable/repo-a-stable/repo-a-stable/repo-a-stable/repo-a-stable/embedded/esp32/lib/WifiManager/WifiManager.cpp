@@ -3,10 +3,7 @@
 #include <Preferences.h>
 
 #include "DEBUG.h"
-<<<<<<< HEAD
-=======
 #include "HelpMethod.h"
->>>>>>> origin/main
 
 // Attempts a blocking Wi‑Fi connection using stored credentials.
 // Returns immediately if credentials are missing. Times out after
@@ -22,11 +19,7 @@ void WiFiManager::Connect() {
 
   DEBUG_KV("SSID", credential_manager_.GetSSID());
   WiFi.mode(WIFI_STA);
-<<<<<<< HEAD
-  delay(100);
-=======
   wait(100);
->>>>>>> origin/main
   WiFi.begin(credential_manager_.GetSSID().c_str(),
              credential_manager_.GetPassword().c_str());
   DEBUG_INFO("Connecting to WiFi...");
@@ -39,11 +32,7 @@ void WiFiManager::Connect() {
       return;
     }
 
-<<<<<<< HEAD
-    delay(500);
-=======
     wait(500);
->>>>>>> origin/main
   }
 
   DEBUG_OK("Connected to WiFi");
@@ -83,11 +72,7 @@ void WiFiManager::Reconnect(uint64_t reconnectInterval) {
       reconnect_start_time = millis();
     }
 
-<<<<<<< HEAD
-    delay(100);
-=======
     wait(100);
->>>>>>> origin/main
     // [TODO]: Call yield() in tight loops to keep the watchdog happy on some
     // cores.
   }

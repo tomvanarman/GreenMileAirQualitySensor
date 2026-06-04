@@ -64,6 +64,8 @@ Prettier is configured in the `.prettierrc` dotfile.
 
 cpplint rules are configured in `CPPLINT.cfg`
 
+clang-format rules are configured in `.clang-format`
+
 eslint rules are configured in `web/eslint.config.mts`
 
 ## Run linters locally

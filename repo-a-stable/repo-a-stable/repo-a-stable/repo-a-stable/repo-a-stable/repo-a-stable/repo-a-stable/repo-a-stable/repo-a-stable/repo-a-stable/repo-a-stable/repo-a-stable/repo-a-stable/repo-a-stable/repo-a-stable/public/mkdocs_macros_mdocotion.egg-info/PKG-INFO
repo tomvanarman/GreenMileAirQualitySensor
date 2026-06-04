@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: mkdocs-macros-mdocotion
+Version: 1.0.0
+Summary: Mdocotion is a theme for the MkDocs static site generator, based on Notion.
+Author: Mats Otten
+Dynamic: author
+Dynamic: summary

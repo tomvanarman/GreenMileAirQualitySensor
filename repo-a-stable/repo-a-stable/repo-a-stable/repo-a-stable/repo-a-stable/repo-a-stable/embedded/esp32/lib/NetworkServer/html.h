@@ -97,12 +97,12 @@ const String index_html = R"rawliteral(
         <h1>Climate measuring box setup</h1>
         <form action="/save" method="post">
             <label>
-                SSID
-                <input name="ssid" placeholder="Network name" required />
+                SSID (optional)
+                <input name="ssid" placeholder="Leave empty to use SIM" />
             </label>
             <label>
-                Password
-                <input name="pass" type="password" placeholder="Network password" required />
+                Password (optional)
+                <input name="pass" type="password" placeholder="Leave empty to use SIM" />
             </label>
             <label>
                 Device ID
@@ -114,7 +114,7 @@ const String index_html = R"rawliteral(
             </label>
             <button type="submit">Save &amp; Connect</button>
         </form>
-        <p class="helper">Enter your network credentials to bring the ESP32 online.</p>
+        <p class="helper">Enter Wi-Fi credentials for Wi-Fi, or leave them empty to use SIM.</p>
     </section>
 </body>
 </html>
