@@ -5,35 +5,29 @@
 
 #include "HelpMethod.h"
 
-time_t DeepSleepManager::getNextQuarterHourEpoch() {
+time_t DeepSleepManager::getNextWakeEpoch(WakeSchedule schedule) {
     time_t now;
     time(&now);
 
     struct tm timeinfo;
     localtime_r(&now, &timeinfo);
 
-    timeinfo.tm_sec = 0;
+    const int intervalMinutes =
+        schedule == WakeSchedule::EveryQuarterHour ? 15 : 5;
+    const int minutesPastInterval = timeinfo.tm_min % intervalMinutes;
 
-    if (timeinfo.tm_min < 15) {
-        timeinfo.tm_min = 15;
-    } else if (timeinfo.tm_min < 30) {
-        timeinfo.tm_min = 30;
-    } else if (timeinfo.tm_min < 45) {
-        timeinfo.tm_min = 45;
-    } else {
-        timeinfo.tm_min = 0;
-        timeinfo.tm_hour += 1;
-    }
+    timeinfo.tm_sec = 0;
+    timeinfo.tm_min += intervalMinutes - minutesPastInterval;
 
     return mktime(&timeinfo);
 }
 
-uint64_t DeepSleepManager::getSleepTimeToNextQuarterHourUs() {
+uint64_t DeepSleepManager::getSleepTimeToNextWakeUs(WakeSchedule schedule) {
     time_t now;
     time(&now);
 
-    time_t nextQuarter = getNextQuarterHourEpoch();
-    time_t sleepSeconds = nextQuarter - now;
+    time_t nextWake = getNextWakeEpoch(schedule);
+    time_t sleepSeconds = nextWake - now;
 
     if (sleepSeconds <= 0) {
         sleepSeconds = 1;
@@ -97,18 +91,21 @@ void DeepSleepManager::enterDeepSleep(SPS30& sps30, TwoWire& sensorWire,
     struct tm nowInfo;
     localtime_r(&now, &nowInfo);
 
-    time_t nextQuarter = getNextQuarterHourEpoch();
+    const WakeSchedule wakeSchedule = DEFAULT_WAKE_SCHEDULE;
+    time_t nextWake = getNextWakeEpoch(wakeSchedule);
 
     struct tm nextInfo;
-    localtime_r(&nextQuarter, &nextInfo);
+    localtime_r(&nextWake, &nextInfo);
 
-    uint64_t sleepTimeUs = getSleepTimeToNextQuarterHourUs();
+    uint64_t sleepTimeUs = getSleepTimeToNextWakeUs(wakeSchedule);
     char currentTimeText[26];
     char nextWakeTimeText[26];
     asctime_r(&nowInfo, currentTimeText);
     asctime_r(&nextInfo, nextWakeTimeText);
 
-    DEBUG_INFO("Entering deep sleep until next quarter");
+    DEBUG_INFO(wakeSchedule == WakeSchedule::EveryQuarterHour
+                   ? "Entering deep sleep until next quarter hour"
+                   : "Entering deep sleep until next 5-minute mark");
     DEBUG_KV("Current time", String(currentTimeText));
     DEBUG_KV("Next wake time", String(nextWakeTimeText));
     DEBUG_KV("Sleep duration (seconds)", sleepTimeUs / 1000000ULL);

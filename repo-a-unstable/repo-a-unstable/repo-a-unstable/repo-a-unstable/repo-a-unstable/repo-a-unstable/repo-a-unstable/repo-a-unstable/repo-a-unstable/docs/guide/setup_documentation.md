@@ -2,53 +2,83 @@
 
 This guide explains how to connect your air pollution sensor box to the Green Mile system.
 
-
 ## Step-by-Step Instructions
 
-1. **Start the program:**
-    - Upload and start the program on the microcontroller.
+1. **Upload and start the firmware**
+    - Upload the code to the microcontroller.
+    - Start the device.
 
-2. **Sensor box blinks purple:**
-    - After a few seconds, the sensor box should start blinking purple.
+2. **Wait for the status LED**
+    - After a few seconds, the RGB LED should start blinking purple.
 
-3. **Connect to Wi-Fi:**
-    - Connect your computer or smartphone to the following Wi-Fi network:
-      - **Name:** `ESP_Config`
-      - **Password:** `test1234`
+3. **Connect to the config Wi-Fi network**
+    - Connect your laptop or phone to the created wifi network of the microcontroller:
+    - **SSID:** `ESP_Config`
+    - **Password:** `test1234`
 
-4. **Open the configuration page:**
-    - Open a web browser and enter [192.168.4.1](http://192.168.4.1/) in the address bar.
+4. **Open the configuration page**
+    - Open your browser and go to [http://192.168.4.1](http://192.168.4.1/).
 
-5. **Create an account:**
-    - Create an [account](https://github.com/tomvanarman/GreenMileAirQualitySensor/blob/main/docs/web/frontend.md) if you do not already have one.
+5. **Create a Green Mile account (if needed)**
+    - If you do not already have an account, create one on the server.
 
-**Server credentials:**
-  - **IPV4:** 46.62.232.90
-  - **IPV6:** 2a01:4f9:c013:29cb::/64
-  - **User:** root
-  - **Password:** green-mile
+    **Create a user via SSH:**
+    - Connect to the server:
+        - `ssh user@IPv4`
+    - Enter the server password.
+    - Go to the project directory:
+        - `cd cmb`
+    - Run the user creation script:
+        - `bash scripts/create_user.sh "username" "password"`
+    - Replace `"username"` and `"password"` with your own username and password.
 
-6. **Register your device:**
-    - Go to [https://greenmile.tapp.city/devices](https://greenmile.tapp.city/devices).
-    - Register a new device and save the **Device ID** and **Device Key (Secret Key)**.
-    - :warning: **Important:** The Device Key is only visible once!
+6. **Register your device**
+    - Open [https://greenmile.tapp.city/devices](https://greenmile.tapp.city/devices).
+    - Register a new device.
+    - Choose the device name with the **name convention from the guide below** this step is neccesary please do.
+    - Save the generated **Device ID** and **Device Key (Secret Key)**.
+    - :warning: **Important:** the Device Key is shown only once. Store it in a safe place.
 
-7. **Enter Wi-Fi and device data:**
-    - On the configuration page, enter the following information:
-      - SSID (your Wi-Fi name)
-      - Password (your Wi-Fi password)
-      - Device ID
-      - Device Key
+7. **Enter Wi-Fi and device credentials**
+    - On the configuration page, enter:
+    - SSID (your Wi-Fi name)
+    - Password (your Wi-Fi password)
+    - Device ID
+    - Device Key
 
     ![Login Credentials Page](../assets/LoginCredentialsPage.png)
 
-8. **Connect the sensor box:**
-    - Click "Save & Connect". The sensor box should now connect.
-    - If it continues blinking, please try again.
+8. **Save and connect**
+    - Click **Save & Connect**.
+    - The sensor box should connect to your network.
+    - If the box keeps blinking, verify the credentials and try again.
 
-9. **Check your data:**
-    - Visit [grafana](https://grafana.greenmile.tapp.city/) or [cmb](https://greenmile.tapp.city/devices) to view your sensor data.
-    - Make sure the sensors are correctly connected to the prototype, otherwise the should be blinking blue.
+9. **Verify incoming data**
+    - Open [Grafana](https://grafana.greenmile.tapp.city/) or
+      [Device Portal](https://greenmile.tapp.city/devices).
+    - Sign in with the username and password created earlier.
+    - Confirm sensor data is visible.
 
----
+## Device Name Convention
 
+Use this naming convention when registering a new device.
+
+Format: TYPE-NNN-OWNER
+
+- **TYPE**: WIFI or SIM (always uppercase)
+- **NNN**: three-digit sequence number for the box (001, 002, ...)
+- **OWNER**: short identifier of the person or team who added the box (optional, but recommended)
+
+Examples:
+
+- WIFI-001-Devgreenmile - first box using Wi-Fi, created by Devgreenmile
+- SIM-042-Jan - box number 042 using a SIM connection, added by Jan
+
+Rules:
+
+- Use - as the separator.
+- 1 name per device.
+- Maximum length: 32 characters.
+- TYPE must be uppercase: WIFI` or SIM.
+- The sequence number must always have three digits.
+- Check existing sensor boxes in the dashboard before choosing a new number.
