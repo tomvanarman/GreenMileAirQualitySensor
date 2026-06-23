@@ -43,10 +43,12 @@ public:
   bool stopMeasurement();
   SPS30_measurement readData(uint8_t maxRetries = 3);
   bool isInitialized() const { return _initialized; }
+  void resetState();
   bool isDataReady();
   void printMeasurement(const SPS30_measurement &m) const;
   unsigned long last_update = 0;
   unsigned long last_measurement = 0;
+  bool debug_raw_next_read = false;
 
 private:
   bool initSPS30();

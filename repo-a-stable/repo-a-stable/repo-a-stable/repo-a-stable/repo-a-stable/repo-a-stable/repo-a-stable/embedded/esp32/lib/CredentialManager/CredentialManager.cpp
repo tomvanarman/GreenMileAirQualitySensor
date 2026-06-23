@@ -13,13 +13,23 @@ bool CredentialManager::ValidateCredentials()
     // DEBUG_LOG_LN("Device ID: " + device_id_);
     // DEBUG_LOG_LN("Device Key: " + device_key_);
 
-    if (ssid_.isEmpty() || password_.isEmpty() || device_id_.isEmpty() || device_key_.isEmpty())
+    if (!ValidateWifiCredentials() || !ValidateDeviceCredentials())
     {
         DEBUG_FAIL("Invalid credentials");
         return false;
     }
     DEBUG_OK("Credentials are valid");
     return true;
+}
+
+bool CredentialManager::ValidateWifiCredentials()
+{
+    return !ssid_.isEmpty() && !password_.isEmpty();
+}
+
+bool CredentialManager::ValidateDeviceCredentials()
+{
+    return !device_id_.isEmpty() && !device_key_.isEmpty();
 }
 
 // Loads credentials from the Preferences storage (read-only session).

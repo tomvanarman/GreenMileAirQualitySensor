@@ -5,6 +5,7 @@
 
 // Toggle debug logging globally
 #define DEBUG 1
+#define DEBUG_VERBOSE 0
 
 void debugWarnIndicator() __attribute__((weak));
 
@@ -63,6 +64,18 @@ void debugWarnIndicator() __attribute__((weak));
 // Key-value aligned output
 #define DEBUG_KV(key, value) Serial.println(String(key) + " : " + String(value))
 
+#if DEBUG_VERBOSE
+#define DEBUG_TRACE(msg) DEBUG_INFO(msg)
+#define DEBUG_TRACE_KV(key, value) DEBUG_KV(key, value)
+#define DEBUG_TRACE_SECTION(title) DEBUG_SECTION(title)
+#define DEBUG_TRACE_BLOCK(title) DEBUG_BLOCK(title)
+#else
+#define DEBUG_TRACE(msg)
+#define DEBUG_TRACE_KV(key, value)
+#define DEBUG_TRACE_SECTION(title)
+#define DEBUG_TRACE_BLOCK(title)
+#endif
+
 // Blank line
 #define DEBUG_NEWLINE() Serial.println()
 
@@ -79,6 +92,10 @@ void debugWarnIndicator() __attribute__((weak));
 #define DEBUG_WARN(msg)
 #define DEBUG_INFO(msg)
 #define DEBUG_KV(key, value)
+#define DEBUG_TRACE(msg)
+#define DEBUG_TRACE_KV(key, value)
+#define DEBUG_TRACE_SECTION(title)
+#define DEBUG_TRACE_BLOCK(title)
 #define DEBUG_NEWLINE()
 
 #endif  // DEBUG

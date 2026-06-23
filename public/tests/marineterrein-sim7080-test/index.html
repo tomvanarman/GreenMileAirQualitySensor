@@ -1,0 +1,1711 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../home-field-test-full-cycle/">
+      
+      
+        <link rel="next" href="../../web/0_index/">
+      
+      <link rel="icon" href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAPT09ADg4OACKiYgA////AGtrawDU1NQAlJSUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAVQIiIAAAIgBVAiIgAAAiAFUCEiAAACIAVQIiIAAAcABVAANgAABwAFUAA2AAB3AAYAADYAAHcABgAANgAAdwAGAAA2B3B3AAYAADAHcHcABgAAMAdwd3BmAAAAAHAHAAAAAAAAAAAAAAAAAABAAAAAAAAABEAAAAAAAABEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBAAAAgQAAAIEEAACBDAAAgQwAAIkeAADfHwAA/74AAP/8AAD/+AAA">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.20">
+    
+    
+      
+        <title>ESP32 Deep Sleep Power Optimization Test: Marineterrein USB-C + SIM7080 - Smart Cities Group Project</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.eebd395e.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+	<link rel="stylesheet" href="../../assets/stylesheets/mdocotion.css" />
+	<script src="../../assets/javascripts/mdocotion.js"></script>
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#esp32-deep-sleep-power-optimization-test-marineterrein-usb-c-sim7080" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+     
+	
+<header class="md-header" data-md-component="header">
+
+	<div class="header-inner">
+		<div class="header-info-bar">
+			<label class="md-header__button md-icon" for="__drawer"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg> </label>
+
+			<ul class="mdocotion-breadcrumbs">
+				<li><a href="../battery-test/">Tests</a><span class="breadcrumbs-seperator"></span></li>
+			</ul>
+		</div>
+
+		<ul class="mdocotion-header-nav">
+			<li>
+				
+				<label class="md-header__button md-icon" for="__search"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> </label>
+				<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+			</li>
+		</ul>
+	</div>
+</header> 
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+	
+		
+		
+			<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"  style="background: #f1f5f9;">
+		
+	
+		<div class="md-sidebar__scrollwrap">
+			<div class="md-sidebar__inner">
+			  
+<div class="mdocotion-nav-header">
+	<div class="mdocotion-nav-logo">
+		<a href="../.." >
+			
+  <img src="../../assets/logo.svg" alt="logo">
+
+		</a>
+		</div>
+	
+		Smart Cities Group Project
+	
+</div>
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+	<ul class="md-nav__list" data-md-scrollfix>
+		   
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        The Green Mile
+      </a>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../architecture/0_index/">Architecture</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../architecture/0_index/">Architecture</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/database/" class="md-nav__link">
+        Database
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/docker/" class="md-nav__link">
+        Docker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/system-architecture/" class="md-nav__link">
+        System Architecture
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                Archive
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../..">Archive</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../archive/old%20brackedVersions/GreenMileBracket/" class="md-nav__link">
+        old brackedVersions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                Assets
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../..">Assets</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/TEMPLATES/hardware_components/" class="md-nav__link">
+        TEMPLATES
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/how%20to%20print/" class="md-nav__link">
+        Design
+      </a>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../guide/rgb_indicator_guide/">Guide</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../guide/rgb_indicator_guide/">Guide</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/setup_documentation/" class="md-nav__link">
+        Setup: Air Pollution Sensor Box
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../hardware/0_index/">Hardware</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../hardware/0_index/">Hardware</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/LiFePo4/" class="md-nav__link">
+        LifePo4
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/PCBdesigning/" class="md-nav__link">
+        Green Mile Project – Hardware Architecture
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/SHT41/" class="md-nav__link">
+        SHT41
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/SIM7080G/" class="md-nav__link">
+        SIM7080G – Hardware Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/SPS30/" class="md-nav__link">
+        SPS30
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/Wiring-Documentation/" class="md-nav__link">
+        Wiring Documentation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/embedded-quickstart/" class="md-nav__link">
+        Embedded Hardware – Quickstart
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/embedded-requirements/" class="md-nav__link">
+        Embedded requirements
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/led-strip/" class="md-nav__link">
+        LED Strip
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/segment-display/" class="md-nav__link">
+        Segment Display
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_11" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_7_11" id="__nav_7_11_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../hardware/sim7080g-tests/01-serialtest/">Sim7080g tests</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_11">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../hardware/sim7080g-tests/01-serialtest/">Sim7080g tests</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/02-blinktest/" class="md-nav__link">
+        SIM7080G Test: PMU CHG LED
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/03-vbuswatch/" class="md-nav__link">
+        SIM7080G Test: USB-C and VBUS Watch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/04-bldo2-gnss-rail/" class="md-nav__link">
+        SIM7080G Test: BLDO2 GNSS Antenna Rail
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/05-dc3-modem-rail/" class="md-nav__link">
+        SIM7080G Test: DC3 Modem Rail
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/06-full-cat-m-bringup/" class="md-nav__link">
+        SIM7080G Test: Full Cat-M Bring-Up
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/07-dc3-uvp-stability/" class="md-nav__link">
+        SIM7080G Test: DC3 UVP Stability
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/08-modem-uart-diagnostics/" class="md-nav__link">
+        SIM7080G Test: Modem UART Diagnostics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/09-successful-catm-validation/" class="md-nav__link">
+        SIM7080G Test: Successful Cat-M Validation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/sim7080g-tests/10-sim7080-full-system-integration/" class="md-nav__link">
+        ESP32 Final Integration Test: SIM7080 + SPS30 + SHT41
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../product/0_index/">Product</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../product/0_index/">Product</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../product/product-vision/" class="md-nav__link">
+        Product vision
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../security/0_index/">Security</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../security/0_index/">Security</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/environment-variables/" class="md-nav__link">
+        Environment Variables
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../server/0_index/">Server</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../server/0_index/">Server</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/esp32-portal/" class="md-nav__link">
+        CMB portal
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/network-ssl/" class="md-nav__link">
+        Network & SSL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/server-setup/" class="md-nav__link">
+        Server Setup
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../software/0_index/">Software</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../software/0_index/">Software</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/Ite-interface/" class="md-nav__link">
+        LTE chip (SIM7080G)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/SHT41-doc/" class="md-nav__link">
+        Hardware interfacing | Temperature and humidity sensor (SHT41)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/SPS30/" class="md-nav__link">
+        SPS30
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/cpp-style-guide/" class="md-nav__link">
+        C++ Style Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/debug-logger/" class="md-nav__link">
+        DEBUG Logger
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/development-setup/" class="md-nav__link">
+        Development Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/esp32-firmware-behavior/" class="md-nav__link">
+        ESP32 Firmware Behavior
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/json-format/" class="md-nav__link">
+        JSON Format
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/mqtt-client/" class="md-nav__link">
+        MqttClient Class Documentation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software/wifi-manager/" class="md-nav__link">
+        WiFi Manager
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" checked>
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../battery-test/">Tests</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../battery-test/">Tests</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deep-sleep-power-result-2026-05-31/" class="md-nav__link">
+        ESP32 Deep Sleep Power Result: 3 mA Maximum
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../home-field-test-full-cycle/" class="md-nav__link">
+        ESP32 Home Full-Cycle Test: WiFi Fallback + SIM7080 MQTT
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        ESP32 Deep Sleep Power Optimization Test: Marineterrein USB-C + SIM7080
+      </a>
+      
+        
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../web/0_index/">Web</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../web/0_index/">Web</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../web/api/" class="md-nav__link">
+        API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../web/frontend/" class="md-nav__link">
+        Frontend
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../web/grafana/" class="md-nav__link">
+        Grafana
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+    
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        
+        <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+            <span class="md-nav__icon md-icon"></span>
+            
+                <a href="../../workflow/linting-formatting/">Workflow</a>
+            
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          <a href="../../workflow/linting-formatting/">Workflow</a>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/merge-requests/" class="md-nav__link">
+        Merge Requests Workflow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/stakeholder-validation-user-stories/" class="md-nav__link">
+        Stakeholder Validation with Ruth (Green Mile)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/how-to-scrum/how-to-scrum/" class="md-nav__link">
+        How to scrum
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+ 
+	</ul>
+</nav>
+			</div>
+		</div>
+		</div>
+	
+
+          
+
+	<div class="md-content" data-md-component="content">
+
+	<article class="mdocotion-content md-content__inner md-typeset">
+		<div class="mdocotion-content-scroller">
+			<main class="mdocotion-content-view">
+				<div class="mdocotion-content-block">
+					<div class="mdocotion-content-block-inner"> 
+
+
+<div><h1 id="esp32-deep-sleep-power-optimization-test-marineterrein-usb-c-sim7080">ESP32 Deep Sleep Power Optimization Test: Marineterrein USB-C + SIM7080</h1>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#1-purpose">1. Purpose</a></li>
+<li><a href="#2-test-configuration">2. Test Configuration</a></li>
+<li><a href="#3-firmware-changes-under-test">3. Firmware Changes Under Test</a></li>
+<li><a href="#4-test-result">4. Test Result</a></li>
+<li><a href="#5-network-and-power-source-result">5. Network and Power Source Result</a></li>
+<li><a href="#6-i2c-noise-observation">6. I2C Noise Observation</a></li>
+<li><a href="#7-second-clean-cycle-observation">7. Second Clean Cycle Observation</a></li>
+<li><a href="#8-deep-sleep-shutdown-result">8. Deep Sleep Shutdown Result</a></li>
+<li><a href="#9-remaining-validation">9. Remaining Validation</a></li>
+<li><a href="#10-conclusion">10. Conclusion</a></li>
+</ul>
+<h2 id="1-purpose">1. Purpose</h2>
+<p>Validate the firmware changes made to reduce power use before entering ESP32 deep sleep. This was a
+SIM7080 field-style workflow test at the Marineterrein. WiFi was attempted first by the firmware, but
+the successful network path in this run was SIM7080.</p>
+<p>This test also records that the SIM7080 flow works from laptop USB-C power. Earlier tests suggested
+that Otii power might be required for stable SIM7080 behavior, but this run shows that the important
+fix was the modem power and startup handling in firmware, not Otii as the power source.</p>
+<h2 id="2-test-configuration">2. Test Configuration</h2>
+<ul>
+<li>Test location: Marineterrein.</li>
+<li>Date and time: Friday, 22 May 2026, around <code>12:45</code>.</li>
+<li>Power source: laptop USB-C.</li>
+<li>UART baud rate: <code>115200</code>.</li>
+<li>WiFi SSID attempted by firmware: <code>Marnix's Galaxy S22 Ultra</code>.</li>
+<li>Successful network path: SIM7080 using MQTT.</li>
+<li>SIM registration result: roaming, GPRS connected.</li>
+<li>Sensor I2C pins:<ul>
+<li>SDA: <code>GPIO8</code></li>
+<li>SCL: <code>GPIO9</code></li>
+</ul>
+</li>
+<li>Sensors:<ul>
+<li>SPS30 particulate matter sensor at <code>0x69</code>.</li>
+<li>SHT41 temperature and humidity sensor at <code>0x44</code>.</li>
+</ul>
+</li>
+<li>Deep sleep target: next quarter-hour wake window.</li>
+<li>Current measurement: not measured during this run. This must be validated later at home with a
+  current meter or Otii.</li>
+</ul>
+<h2 id="3-firmware-changes-under-test">3. Firmware Changes Under Test</h2>
+<p>The deep sleep flow was extended so the firmware now shuts down peripherals before calling
+<code>esp_deep_sleep_start()</code>.</p>
+<h3 id="sps30-sensor-sleep">SPS30 sensor sleep</h3>
+<p>The SPS30 datasheet provides a sensor sleep command. The firmware now sends this command instead of
+only stopping measurement mode.</p>
+<pre class="highlight"><code class="language-cpp">#define SPS30_CMD_SLEEP 0x1001
+#define SPS30_CMD_WAKE_UP 0x1103</code></pre>
+<pre class="highlight"><code class="language-cpp">bool SPS30::sleep()
+{
+    if (!_wire)
+        return false;
+
+    if (_measuring)
+    {
+        stopMeasurement();
+        wait(20);
+    }
+
+    bool slept = sendCommand(SPS30_CMD_SLEEP);
+    if (slept)
+    {
+        _initialized = false;
+        _measuring = false;
+    }
+    return slept;
+}</code></pre>
+<p>The wake-up command is sent before sensor probing so the device can recover after the previous cycle
+put the SPS30 into sleep mode.</p>
+<pre class="highlight"><code class="language-cpp">bool SPS30::wakeUp(TwoWire &amp;wire)
+{
+    _wire = &amp;wire;
+
+    sendCommand(SPS30_CMD_WAKE_UP);
+    wait(5);
+
+    bool woke = sendCommand(SPS30_CMD_WAKE_UP);
+    wait(5);
+    return woke;
+}</code></pre>
+<h3 id="deep-sleep-peripheral-shutdown">Deep sleep peripheral shutdown</h3>
+<p>The deep sleep manager now clears outputs, sleeps the SPS30, releases the sensor I2C bus, shuts down
+wireless radios, and asks the SIM7080 driver to disable modem rails.</p>
+<pre class="highlight"><code class="language-cpp">void DeepSleepManager::preparePeripheralsForDeepSleep(
+    LEDStrip &amp;strip, SegmentDisplay &amp;segmentDisplay, SPS30 &amp;sps30,
+    TwoWire &amp;sensorWire, SIM7080 &amp;sim7080, int sensorSdaPin,
+    int sensorSclPin, bool useSIM) {
+  DEBUG_SECTION("Deep Sleep Peripheral Shutdown");
+
+  strip.clear();
+  segmentDisplay.clearDisplay();
+
+  if (sps30.isInitialized()) {
+    if (sps30.sleep()) {
+      DEBUG_OK("SPS30 entered sensor sleep mode");
+    } else {
+      DEBUG_WARN("SPS30 sleep command failed");
+    }
+  }
+  sps30.resetState();
+
+  sensorWire.end();
+
+  pinMode(sensorSdaPin, INPUT);
+  pinMode(sensorSclPin, INPUT);
+
+  if (!useSIM) {
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+    esp_wifi_stop();
+  }
+
+  btStop();
+  esp_bt_controller_disable();
+
+  sim7080.shutdownForDeepSleep();
+}</code></pre>
+<h3 id="sim7080-modem-rail-shutdown">SIM7080 modem rail shutdown</h3>
+<p>The SIM7080 driver now has an explicit deep sleep shutdown path. It disconnects the modem when it
+was started, ends the UART, releases modem pins, and disables the AXP2101 rails used by the modem.</p>
+<pre class="highlight"><code class="language-cpp">void SIM7080::shutdownForDeepSleep() {
+    DEBUG_SECTION("SIM7080 Deep Sleep Shutdown");
+
+    if (!_pmu.begin(Wire, AXP2101_SLAVE_ADDRESS, I2C_SDA, I2C_SCL)) {
+        DEBUG_WARN("PMU unavailable, modem rails could not be disabled");
+        return;
+    }
+
+    if (modemStarted_) {
+        _modem.sendAT("+SMDISC");
+        _modem.waitResponse(2000L);
+
+        _modem.gprsDisconnect();
+
+        _modem.sendAT("+CFUN=0");
+        _modem.waitResponse(10000L);
+
+        _modem.poweroff();
+        _modem.waitResponse(5000L);
+    }
+
+    Serial1.end();
+    modemStarted_ = false;
+
+    digitalWrite(BOARD_MODEM_PWR_PIN, LOW);
+    digitalWrite(BOARD_MODEM_DTR_PIN, LOW);
+    pinMode(BOARD_MODEM_PWR_PIN, INPUT);
+    pinMode(BOARD_MODEM_DTR_PIN, INPUT);
+    pinMode(BOARD_MODEM_RXD_PIN, INPUT);
+    pinMode(BOARD_MODEM_TXD_PIN, INPUT);
+
+    DEBUG_INFO("Modem rails shutting down; ESP32 will enter deep sleep next");
+    Serial.flush();
+    wait(50);
+
+    _pmu.disableDC3();
+    _pmu.disableBLDO1();
+    _pmu.disableVbusVoltageMeasure();
+    _pmu.disableBattVoltageMeasure();
+    _pmu.disableSystemVoltageMeasure();
+    _pmu.disableBattDetection();
+
+    DEBUG_OK("SIM7080 modem rails disabled for deep sleep");
+}</code></pre>
+<h2 id="4-test-result">4. Test Result</h2>
+<p>The device completed the full SIM7080 workflow successfully, despite heavy I2C startup noise.</p>
+<p>The firmware:</p>
+<ul>
+<li>Started from laptop USB-C power.</li>
+<li>Tried WiFi first as part of the current firmware flow.</li>
+<li>Used SIM7080 successfully after WiFi timeout.</li>
+<li>Initialized the power chip.</li>
+<li>Started the SIM7080 modem.</li>
+<li>Registered on the network in roaming mode.</li>
+<li>Connected GPRS.</li>
+<li>Synchronized system time from the modem.</li>
+<li>Eventually recovered the I2C sensors.</li>
+<li>Sent SPS30 data over MQTT.</li>
+<li>Sent SHT41 data over MQTT.</li>
+<li>Entered the deep sleep flow.</li>
+<li>Put the SPS30 into sensor sleep mode.</li>
+<li>Disabled SIM7080 modem rails.</li>
+<li>Printed the final ESP32 deep sleep marker.</li>
+</ul>
+<h2 id="5-network-and-power-source-result">5. Network and Power Source Result</h2>
+<p>The SIM7080 worked while the board was powered from laptop USB-C.</p>
+<pre class="highlight"><code class="language-text">==================================================
+Start Modem
+==================================================
+
+[INFO] Waiting for modem AT response...
+[WARN] No AT response from modem
+[WARN] No AT response from modem
+[OK] Modem started!</code></pre>
+<pre class="highlight"><code class="language-text">==================================================
+Registering to Network
+==================================================
+
+[INFO] Waiting for network registration...
+Network register info: : Registered, roaming.
+GPRS status: : connected
+[OK] Network registration completed!</code></pre>
+<p>This means Otii was not the key solution for SIM7080 stability. The tested firmware changes around
+PMU setup, modem startup, and modem rail handling are what made the SIM7080 flow work reliably enough
+for this run.</p>
+<h2 id="6-i2c-noise-observation">6. I2C Noise Observation</h2>
+<p>I2C noise is still present and remains the main reliability issue after the deep sleep work.</p>
+<p>At startup, the sensor bus reported <code>SCL</code> low:</p>
+<pre class="highlight"><code class="language-text">==================================================
+Sensor I2C Bus Recovery
+==================================================
+
+SDA idle : HIGH
+SCL idle : LOW</code></pre>
+<p>The first known device probe found the SPS30 once, but not the SHT41:</p>
+<pre class="highlight"><code class="language-text">==================================================
+I2C Known Device Probe
+==================================================
+
+[WARN] SHT41 missing at 0X44, error 5
+[OK] SPS30 found at 0X69</code></pre>
+<p>The waiting loop then showed inconsistent results. Sometimes one sensor responded, sometimes neither
+sensor responded.</p>
+<pre class="highlight"><code class="language-text">[WARN] Sensor I2C wait attempt 1 SHT41=missing SPS30=OK
+[WARN] Sensor I2C wait attempt 2 SHT41=missing SPS30=missing
+[WARN] Sensor I2C wait attempt 3 SHT41=OK SPS30=missing
+[WARN] Sensor I2C wait attempt 4 SHT41=missing SPS30=missing</code></pre>
+<p>After the wait timeout, SPS30 initialization failed many times before eventually recovering.</p>
+<pre class="highlight"><code class="language-text">[WARN] Sensor I2C devices did not both respond before timeout
+[WARN] SPS30 init attempt 1 failed
+[WARN] SPS30 initialization attempt batch failed
+[WARN] SPS30 not found yet, retrying</code></pre>
+<p>During the loop, both sensors continued to show symptoms of bus instability:</p>
+<pre class="highlight"><code class="language-text">[WARN] SPS30 read failed after retries
+[WARN] Failed to read from sps30 sensor
+[WARN] SHT41 not initialized, retrying setup
+[WARN] SHT41 init attempt 1 failed
+[WARN] SHT41 initialization attempt batch failed</code></pre>
+<p>Despite this, the retry behavior eventually recovered both sensors and the cycle finished.</p>
+<h2 id="7-second-clean-cycle-observation">7. Second Clean Cycle Observation</h2>
+<p>A later cycle behaved much better and looked like a clean golden path. In that run, both sensors were
+found immediately, the SPS30 initialized and measured normally, the SHT41 initialized successfully
+during setup, both MQTT payloads were published on the first attempt, and the firmware entered the
+deep sleep shutdown flow without long sensor retries.</p>
+<p>The exact reason why the second cycle worked so cleanly is not known yet. It may be related to sensor
+warm-up state, bus state after the previous recovery, timing, cabling/contact stability, or another
+hardware condition. For now, this should be recorded as an observation rather than treated as a
+confirmed fix for the I2C noise.</p>
+<h2 id="8-deep-sleep-shutdown-result">8. Deep Sleep Shutdown Result</h2>
+<p>The final successful part of the run shows the device sending both MQTT payloads and entering deep
+sleep.</p>
+<pre class="highlight"><code class="language-text">[INFO] Successfully sent SPS30 data
+[OK] SHT41 initialized successfully
+[INFO] Successfully sent SHT41 data
+[OK] All data sent successfully, entering deep sleep</code></pre>
+<p>Deep sleep scheduling worked and targeted the next quarter-hour.</p>
+<pre class="highlight"><code class="language-text">==================================================
+Deep Sleep
+==================================================
+
+[INFO] Entering deep sleep until next quarter
+Current time : Fri May 22 12:45:44 2026
+
+Next wake time : Fri May 22 13:00:00 2026
+
+Sleep duration (seconds) : 856</code></pre>
+<p>The peripheral shutdown logs also completed.</p>
+<pre class="highlight"><code class="language-text">==================================================
+Deep Sleep Peripheral Shutdown
+==================================================
+
+[OK] SPS30 entered sensor sleep mode
+
+==================================================
+SIM7080 Deep Sleep Shutdown
+==================================================
+
+[INFO] Modem rails shutting down; ESP32 will enter deep sleep next
+[OK] SIM7080 modem rails disabled for deep sleep
+[INFO] ESP32 entering deep sleep now</code></pre>
+<p>This confirms that the firmware reached the expected final shutdown point. The actual deep sleep
+current still needs to be measured separately.</p>
+<h2 id="9-remaining-validation">9. Remaining Validation</h2>
+<p>The tested firmware is good enough to merge to <code>develop</code> based on functional behavior. The feature
+branch does not need to be deleted yet, because later home testing still needs to measure the actual
+deep sleep current in mA.</p>
+<p>Remaining work:</p>
+<ul>
+<li>Measure current after the final <code>ESP32 entering deep sleep now</code> message.</li>
+<li>Confirm whether the current is lower than the earlier <code>80-100 mA</code> result.</li>
+<li>Let the device wake at the next quarter-hour and confirm a second cycle starts normally.</li>
+<li>Investigate the remaining I2C noise, especially the <code>SCL idle : LOW</code> startup state and the
+  inconsistent SHT41/SPS30 probe results.</li>
+<li>Compare noisy and clean cycles to find why the second test behaved perfectly.</li>
+</ul>
+<h2 id="10-conclusion">10. Conclusion</h2>
+<p>This test is successful for firmware behavior. The device completed the whole workflow on USB-C
+laptop power, used SIM7080 successfully, published both sensor payloads, and reached the final deep
+sleep marker after shutting down the SPS30 and SIM7080 rails.</p>
+<p>The main lesson is that Otii was not the key fix for SIM7080 stability. The code changes around the
+SIM7080 PMU setup and shutdown path are what made the modem flow work on a normal USB-C power source.</p>
+<p>The remaining issue is I2C noise. It did not block this cycle permanently, but it caused a long
+recovery time and many failed sensor probes/reads before the firmware eventually recovered.
+A second cycle appeared to work perfectly, but the cause of that improvement is still unknown.</p></div>
+
+
+
+
+  </div>
+				</div>
+			</main>
+		</div>
+	</article>
+</div>
+
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+      </main>
+      
+        
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+     
+	
+      <script src="../../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+     
+
+  </body>
+</html>

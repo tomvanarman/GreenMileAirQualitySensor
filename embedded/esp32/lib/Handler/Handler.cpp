@@ -1,6 +1,29 @@
 #include <DEBUG.h>
 #include <Handler.h>
 
+namespace {
+
+    void probeI2CDevice(TwoWire& wire, uint8_t address, const char* name) {
+    wire.beginTransmission(address);
+    uint8_t error = wire.endTransmission();
+
+    String addressText = "0x";
+    if (address < 16) {
+        addressText += "0";
+    }
+    addressText += String(address, HEX);
+    addressText.toUpperCase();
+
+    if (error == 0) {
+        DEBUG_OK(String(name) + " found at " + addressText);
+        return;
+    }
+
+    DEBUG_WARN(String(name) + " missing at " + addressText + ", error " +
+               String(error));
+}
+}
+
 void Handler::setupSim7080(SIM7080& sim7080, RGBLight& rgb) {
     sim7080.initialize();
     sim7080.startModem();
@@ -79,7 +102,6 @@ void Handler::setupCredentialManager(CredentialManager& credential_manager,
             "Invalid or missing device credentials, starting AP for "
             "configuration...");
         server.StartAP();
-        startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
         while (1) {
             server.HandleRequests();
@@ -108,10 +130,13 @@ void Handler::setupWifi(WiFiManager& network, NetworkServer& server,
     disableRGB(rgb);
 }
 
-bool Handler::setupSPS30(SPS30& sps30, TwoWire& wire, RGBLight& rgb) {
-    while (!sps30.begin(wire, 1)) {
-        DEBUG_WARN("SPS30 not found yet, retrying");
-        wait(2000);
+bool Handler::setupSPS30(SPS30& sps30, HardwareSerial& serial, int rxPin,
+                         int txPin, RGBLight& rgb) {
+    if (!sps30.begin(serial, rxPin, txPin, 1)) {
+        DEBUG_WARN(
+            "SPS30 not ready during setup, continuing with loop retries");
+        rgb.errorEncountered(SetupError::SENSOR_INIT_FAILED);
+        return false;
     }
     disableRGB(rgb);
     return true;
@@ -123,13 +148,57 @@ bool Handler::setupSHT41(SHT41Sensor& sht41, TwoWire& wire, RGBLight& rgb) {
     if (!sht41.begin(wire, 3)) {
         DEBUG_WARN(
             "SHT41 not ready during setup, continuing with loop retries");
+        rgb.errorEncountered(SetupError::SENSOR_INIT_FAILED);
         return false;
     }
     disableRGB(rgb);
     return true;
 }
 
-void Handler::enterDeepSleep(LEDStrip& strip, SegmentDisplay& segmentDisplay,
-                             bool useSIM) {
-    deepSleepManager.enterDeepSleep(strip, segmentDisplay, useSIM);
+void Handler::setupSensorI2CBus(TwoWire& wire, int sdaPin, int sclPin,
+                                uint32_t clockHz, uint32_t timeoutMs) {
+    DEBUG_TRACE_SECTION("Sensor I2C Setup");
+    DEBUG_TRACE_KV("Sensor SDA pin", sdaPin);
+    DEBUG_TRACE_KV("Sensor SCL pin", sclPin);
+
+    DEBUG_TRACE_SECTION("Sensor I2C Bus Recovery");
+    wire.end();
+
+    pinMode(sdaPin, INPUT_PULLUP);
+    pinMode(sclPin, INPUT_PULLUP);
+    wait(10);
+
+    bool sdaHigh = digitalRead(sdaPin) == HIGH;
+    bool sclHigh = digitalRead(sclPin) == HIGH;
+    DEBUG_TRACE_KV("SDA idle", sdaHigh ? "HIGH" : "LOW");
+    DEBUG_TRACE_KV("SCL idle", sclHigh ? "HIGH" : "LOW");
+
+    if (!sdaHigh) {
+        DEBUG_WARN("SDA is low, pulsing SCL to release the I2C bus");
+        pinMode(sclPin, OUTPUT_OPEN_DRAIN);
+
+        for (uint8_t pulse = 0; pulse < 9; pulse++) {
+            digitalWrite(sclPin, LOW);
+            delayMicroseconds(5);
+            digitalWrite(sclPin, HIGH);
+            delayMicroseconds(5);
+        }
+    }
+
+    pinMode(sdaPin, INPUT_PULLUP);
+    pinMode(sclPin, INPUT_PULLUP);
+
+    wire.begin(sdaPin, sclPin);
+    wire.setClock(clockHz);
+    wire.setTimeOut(timeoutMs);
+
+    DEBUG_TRACE_SECTION("I2C Known Device Probe");
+    probeI2CDevice(wire, 0x44, "SHT41");
+}
+
+void Handler::enterDeepSleep(SPS30& sps30, TwoWire& sensorWire,
+                             SIM7080& sim7080, int sensorSdaPin,
+                             int sensorSclPin, bool useSIM) {
+    deepSleepManager.enterDeepSleep(sps30, sensorWire, sim7080, sensorSdaPin,
+                                    sensorSclPin, useSIM);
 }
