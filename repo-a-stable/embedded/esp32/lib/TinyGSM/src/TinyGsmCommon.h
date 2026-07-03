@@ -74,7 +74,7 @@ static void DBG(Args... args) {
   TINY_GSM_DEBUG.print(GF("] "));
   DBG_PLAIN(args...);
 }
-}  // namespace
+}
 #else
 #define DBG_PLAIN(...)
 #define DBG(...)

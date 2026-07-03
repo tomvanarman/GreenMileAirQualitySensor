@@ -1,27 +1,76 @@
 #include <DEBUG.h>
 #include <Handler.h>
 
-void Handler::setupSim7080(SIM7080 &sim7080, LEDStrip &strip) {
+void Handler::setupSim7080(SIM7080 &sim7080, RGBLight &rgb) {
   sim7080.initialize();
   sim7080.startModem();
   sim7080.setupNetwork();
 
   if (!sim7080.ensureConnected()) {
     DEBUG_WARN("Failed to connect to network");
-    strip.stopLoading();
-    strip.startLoading(CRGB::Purple, LEDStrip::_loadingModeType::BLINKING);
+    disableRGB(rgb);
+    errorEncounteredRGB(rgb, SetupError::WIFI_INIT_FAILED);
 
     while (1)
       sim7080.ensureConnected();
   }
+  disableRGB(rgb);
+}
 
-  strip.stopLoading();
-  strip.clear();
+void Handler::setupRGB(RGBLight &rgb) {
+  rgb.setup();
+}
+
+
+void Handler::rgbInitialization(RGBLight &rgb) {
+  if (rgbTaskHandle == nullptr) {
+    // Übergibt einen Zeiger auf das RGBLight-Objekt an den Task
+    xTaskCreate(rgbTask, "RGBInitTask", 2048, &rgb, 1, &rgbTaskHandle);
+    DEBUG_INFO("RGB initialization task started");
+  }
+}
+
+void Handler::disableRGB(RGBLight &rgb) {
+  if (rgbTaskHandle != nullptr) {
+    vTaskDelete(rgbTaskHandle);
+    rgbTaskHandle = nullptr;
+  }
+  rgb.disable();
+}
+
+void Handler::rgbTask(void *pvParameters) {
+  RGBLight *rgb = static_cast<RGBLight*>(pvParameters);
+  if (rgb) {
+    rgb->startInitialization();
+  }
+  vTaskDelete(nullptr); 
+}
+
+
+void Handler::errorEncounteredRGB(RGBLight &rgb, SetupError error) {
+  disableRGB(rgb);
+  rgb.errorEncountered(error);
+}
+
+void Handler::errorTask(void *pvParameters) {
+  ErrorTaskParams* params = static_cast<ErrorTaskParams*>(pvParameters);
+  if (params && params->rgb) {
+    params->rgb->errorEncountered(params->error);
+  }
+  delete params;
+  vTaskDelete(nullptr); 
+}
+
+void Handler::startErrorTask(RGBLight &rgb, SetupError error) {
+  if (errorTaskHandle == nullptr) {
+    ErrorTaskParams* params = new ErrorTaskParams{&rgb, error};
+    xTaskCreate(errorTask, "ErrorTask", 2048, params, 1, &errorTaskHandle);
+    DEBUG_INFO("Error display task started");
+  }
 }
 
 void Handler::setupCredentialManager(CredentialManager &credential_manager,
-                                     NetworkServer &server, LEDStrip &strip,
-                                     SegmentDisplay &segmentDisplay) {
+                                     NetworkServer &server, RGBLight &rgb) {
   credential_manager.LoadCredentials();
 
   if (!credential_manager.ValidateCredentials()) {
@@ -29,68 +78,60 @@ void Handler::setupCredentialManager(CredentialManager &credential_manager,
         "Invalid or missing credentials, starting AP for configuration...");
     server.StartAP();
 
-    strip.stopLoading();
-    strip.startLoading(CRGB::Purple, LEDStrip::_loadingModeType::BLINKING);
-
-    segmentDisplay.start();
-    segmentDisplay.setIPAddress("192.168.4.1");
+    disableRGB(rgb);
+    startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
     while (true) {
       server.HandleRequests();
-      wait(10);
+      wait(50);
+      yield();
     }
   }
+  disableRGB(rgb);
 }
 
-void Handler::setupWifi(WiFiManager &network, NetworkServer &server,
-                        LEDStrip &strip, SegmentDisplay &segmentDisplay) {
+void Handler::setupWifi(WiFiManager &network, NetworkServer &server,RGBLight &rgb) {
   network.Connect();
 
   if (!network.isConnected()) {
     DEBUG_WARN("Wrong credentials, starting AP for configuration...");
     server.StartAP();
-
-    strip.stopLoading();
-    strip.startLoading(CRGB::Purple, LEDStrip::_loadingModeType::BLINKING);
-
-    segmentDisplay.start();
-    segmentDisplay.setIPAddress("192.168.4.1");
+    disableRGB(rgb);
+    startErrorTask(rgb, SetupError::INVALID_CREDENTIALS);
 
     while (true) {
       server.HandleRequests();
-      wait(10);
+      wait(50);
+      yield();
     }
   }
+  disableRGB(rgb);
 }
 
-void Handler::setupSPS30(SPS30 &sps30, TwoWire &wire, LEDStrip &strip) {
-  strip.startLoading(CRGB::DeepSkyBlue, LEDStrip::_loadingModeType::BREATHING);
+void Handler::setupSPS30(SPS30 &sps30, TwoWire &wire, RGBLight &rgb) {
 
   if (!sps30.begin(wire)) {
     DEBUG_WARN("Failed to find SPS30 sensor");
-    strip.stopLoading();
-    strip.startLoading(CRGB::DeepSkyBlue, LEDStrip::_loadingModeType::BLINKING);
+    errorEncounteredRGB(rgb, SetupError::SENSOR_INIT_FAILED);
 
     while (1)
       wait(10);
   }
-
-  strip.stopLoading();
+  disableRGB(rgb);
 }
 
-void Handler::setupSHT41(SHT41Sensor &sht41, TwoWire &wire, LEDStrip &strip) {
-  strip.startLoading(CRGB::DarkBlue, LEDStrip::_loadingModeType::BREATHING);
+void Handler::setupSHT41(SHT41Sensor &sht41, TwoWire &wire, RGBLight &rgb) {
+  rgb.disable();
 
   if (!sht41.begin(wire)) {
     DEBUG_WARN("Failed to find SHT41 sensor");
-    strip.stopLoading();
-    strip.startLoading(CRGB::DarkBlue, LEDStrip::_loadingModeType::BLINKING);
+    errorEncounteredRGB(rgb, SetupError::SENSOR_INIT_FAILED);
 
     while (1)
       wait(10);
   }
 
-  strip.stopLoading();
+  disableRGB(rgb);
 }
 
 void Handler::enterDeepSleep(LEDStrip &strip, SegmentDisplay &segmentDisplay,

@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rgb-indicator-guide" class="md-skip">
+        <a href="#1-rgb-indicator-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -1161,6 +1161,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tests/marineterrein-sim7080-test/" class="md-nav__link">
+        ESP32 Deep Sleep Power Optimization Test: Marineterrein USB-C + SIM7080
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1342,61 +1356,62 @@
 
   <h1>Guide</h1>
 
-<div><h2 id="rgb-indicator-guide">RGB Indicator Guide</h2>
-<h3 id="overview">Overview</h3>
-<p>The climate measuring box uses an addressable RGB LED strip to provide clear, visual feedback about its status and activities. The lights help users quickly understand what the device is doing, even without looking at a screen.</p>
-<h3 id="led-behaviors-meanings">LED Behaviors &amp; Meanings</h3>
-<h4 id="1-solid-color">1. Solid Color</h4>
+<div><p><a id="rgb-indicator-guide"></a></p>
+<h2 id="1-rgb-indicator-guide">1. RGB Indicator Guide</h2>
+<p><a id="why-this-document-exists"></a></p>
+<h3 id="why-this-document-exists">Why this document exists</h3>
+<p>This guide documents the exact behavior implemented for the device's discrete 3‑pin RGB indicator (<code>RGBLight</code>). It exists so maintainers and integrators know the precise, code-backed behavior used for wiring checks, initialization, warnings, errors and shutdown. The document deliberately lists only behaviors that are implemented in source.</p>
+<h3 id="table-of-contents">Table of contents</h3>
 <ul>
-<li>The entire strip lights up in a single color.</li>
-<li>Used to indicate a specific status (e.g., ready, error, or a custom state).</li>
+<li><a href="#rgb-indicator-guide">1. RGB Indicator Guide</a></li>
+<li><a href="#why-this-document-exists">1.1 Why this document exists</a></li>
+<li><a href="#discrete-rgb-indicator-rgblight">1.2 Discrete RGB Indicator (<code>RGBLight</code>)</a><ul>
+<li><a href="#setup">1.2.1 <code>setup()</code></a></li>
+<li><a href="#setupcolorcheck">1.2.2 <code>setupColorCheck()</code></a></li>
+<li><a href="#startinitialization">1.2.3 <code>startInitialization()</code></a></li>
+<li><a href="#warningblink">1.2.4 <code>warningBlink()</code></a></li>
+<li><a href="#errorencountered">1.2.5 <code>errorEncountered()</code></a></li>
+<li><a href="#disable">1.2.6 <code>disable()</code></a></li>
 </ul>
-<h4 id="2-loading-animations">2. Loading Animations</h4>
-<p>The device uses two main loading animations to show ongoing processes:</p>
-<p><strong>a. Breathing</strong>
-- The LEDs smoothly fade in and out, creating a “breathing” effect.
-- Indicates the device is busy, starting up, or processing something.
-- The color of the breathing effect can be set to match the type of activity.</p>
-<p><strong>b. Blinking</strong>
-- The LEDs turn on and off in a regular pattern.
-- Used for attention or warning signals (e.g., waiting for user action or error state).</p>
-<h4 id="3-color-transitions">3. Color Transitions</h4>
-<ul>
-<li>The LEDs can smoothly transition from one color to another.</li>
-<li>This is used to indicate a change in state (e.g., from setup to ready).</li>
+</li>
 </ul>
-<h4 id="4-gradient">4. Gradient</h4>
+<p><a id="discrete-rgb-indicator-rgblight"></a></p>
+<h3 id="12-discrete-rgb-indicator-rgblight">1.2 Discrete RGB Indicator (<code>RGBLight</code>)</h3>
+<p><a id="setup"></a></p>
+<h4 id="121-setup">1.2.1 <code>setup()</code></h4>
 <ul>
-<li>The strip can display a gradient from one color to another across its length.</li>
-<li>Used for more advanced or decorative feedback.</li>
+<li>Configures the three GPIO pins (red, green, blue) as outputs and sets them LOW (all off).</li>
 </ul>
-<h3 id="example-color-meanings-typical-usage">Example Color Meanings (Typical Usage)</h3>
+<p><a id="setupcolorcheck"></a></p>
+<h4 id="122-setupcolorcheck">1.2.2 <code>setupColorCheck()</code></h4>
 <ul>
-<li><strong>Green:</strong> Device is ready or operating normally.</li>
-<li><strong>Blue (Breathing):</strong> Device is starting up or connecting.</li>
-<li><strong>Yellow (Blinking):</strong> Waiting for user input or network.</li>
-<li><strong>Red (Solid or Blinking):</strong> Error or warning.</li>
+<li>Turns each color pin HIGH for 1000 ms in sequence (red → green → blue) to allow a wiring/LED check, then sets them LOW.</li>
+</ul>
+<p><a id="startinitialization"></a></p>
+<h4 id="123-startinitialization">1.2.3 <code>startInitialization()</code></h4>
+<ul>
+<li>Runs a continuous initialization sequence that breathes the blue LED, then breathes the green LED, repeatedly.</li>
+<li>Breathing parameters: <code>breathSteps = 50</code>, <code>breathDelay = 20 ms</code> (PWM steps increment/decrement across ~50 steps).</li>
+<li>Note: this function contains an infinite loop designed to run as a task until externally stopped.</li>
+</ul>
+<p><a id="warningblink"></a></p>
+<h4 id="124-warningblink">1.2.4 <code>warningBlink()</code></h4>
+<ul>
+<li>Performs a single short red blink: red set to full PWM (255) for ~100 ms, then off.</li>
+</ul>
+<p><a id="errorencountered"></a></p>
+<h4 id="125-errorencountered">1.2.5 <code>errorEncountered()</code></h4>
+<ul>
+<li>Enters an infinite loop blinking red on for 500 ms and off for 500 ms. Intended for fatal/setup errors; it does not return.</li>
+</ul>
+<p><a id="disable"></a></p>
+<h4 id="126-disable">1.2.6 <code>disable()</code></h4>
+<ul>
+<li>Sets all three color pins to LOW (turns LEDs off) via <code>analogWrite(..., LOW)</code>.</li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> The exact color meanings can be customized in the software.</p>
-</blockquote>
-<hr>
-<h2 id="rgb-indicator-discrete-rgb-led">RGB Indicator (Discrete RGB LED)</h2>
-<p>The following behaviors are implemented in the <code>RGBLight.cpp</code> file:</p>
-<ul>
-<li>On setup, each color (red, green, blue) is turned on for 1 second in sequence, then turned off.</li>
-<li>During initialization, the blue LED fades in and out (breathing effect), followed by the green LED fading in and out, in a continuous loop.</li>
-<li>When <code>errorEncountered</code> is called, the red LED blinks on and off every 500 ms in an infinite loop.</li>
-<li>
-<p>When <code>disable</code> is called, all LEDs are set to off.</p>
-</li>
-<li>
-<p><strong>Solid green:</strong> All systems go!</p>
-</li>
-<li><strong>Breathing blue:</strong> Device is working or connecting.</li>
-<li><strong>Blinking yellow:</strong> Needs your attention.</li>
-<li><strong>Solid or blinking red:</strong> Something is wrong—check the device or consult the manual.</li>
-</ul></div>
+<p>Only the discrete <code>RGBLight</code> behavior is documented here; references to addressable LED strips have been removed because this unit uses the 3‑pin RGB indicator.</p>
+</blockquote></div>
 
 
 
